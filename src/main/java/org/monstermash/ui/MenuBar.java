@@ -18,10 +18,19 @@ public class MenuBar extends JMenuBar {
     }
 
     private static class FileMenu extends JMenu {
+        private final JMenuItem render;
         private final JMenuItem exit;
 
         public FileMenu(String title) {
             super(title);
+
+            render = new JMenuItem("Render");
+            render.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_R,
+                InputEvent.CTRL_DOWN_MASK));
+            render.addActionListener(e -> StatBlock.renderImage());
+            super.add(render);
+
             exit = new JMenuItem("Exit");
             exit.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_X,

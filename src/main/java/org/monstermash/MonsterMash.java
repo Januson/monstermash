@@ -8,9 +8,13 @@ import javax.swing.SwingUtilities;
 
 public class MonsterMash {
     public static void main(String[] args) {
-        MonsterOptions monsterOptions = new MonsterOptions();
-        MenuBar menuBar = new MenuBar();
-        MainWindow mainWindow = new MainWindow(monsterOptions, menuBar);
+        final var mainWindow = buildApp();
         SwingUtilities.invokeLater(mainWindow::run);
+    }
+
+    private static MainWindow buildApp() {
+        final var monsterOptions = new MonsterOptions();
+        final var menuBar = new MenuBar();
+        return new MainWindow(monsterOptions, menuBar);
     }
 }
