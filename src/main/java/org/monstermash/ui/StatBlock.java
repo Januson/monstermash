@@ -1,5 +1,6 @@
 package org.monstermash.ui;
 
+import org.monstermash.stats.Ability;
 import org.monstermash.stats.Attribute;
 import org.monstermash.stats.DamageModifier;
 import org.monstermash.stats.Language;
@@ -133,8 +134,8 @@ public class StatBlock {
         constraints.gridy++;
         returnMe.add(getNewSeparator(), constraints);
         constraints.gridy++;
-//        returnMe.add(getAbilities(), constraints);
-//        constraints.gridy++;
+        returnMe.add(getAbilities(), constraints);
+        constraints.gridy++;
 //        returnMe.add(getActions(), constraints);
 //        constraints.gridy++;
 //        returnMe.add(getReactions(), constraints);
@@ -455,6 +456,27 @@ public class StatBlock {
             panel.add(data);
             panel.add(Box.createHorizontalGlue());
             returnMe.add(panel);
+        }
+        return returnMe;
+    }
+
+    private static JPanel getAbilities() {
+        List<Ability> abilities = List.of(
+            new Ability("Chameleon","{namecap} can change the color of {him}self to match the color and texture of {his} surroundings. As a result, {he} has advantage on Dexterity (Stealth) checks made to hide.")
+        );
+        JPanel returnMe = new JPanel();
+        returnMe.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 1;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        returnMe.setOpaque(false);
+        for (Ability a : abilities) {
+            String text = a.asText();
+            JLabel label = new JLabel(text);
+            returnMe.add(label, constraints);
+            constraints.gridy++;
         }
         return returnMe;
     }
