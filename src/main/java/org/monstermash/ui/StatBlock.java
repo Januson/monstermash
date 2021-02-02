@@ -1,5 +1,11 @@
 package org.monstermash.ui;
 
+import org.monstermash.stats.Attribute;
+import org.monstermash.stats.DamageModifier;
+import org.monstermash.stats.Language;
+import org.monstermash.stats.Sense;
+import org.monstermash.stats.Skill;
+
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -18,9 +24,15 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+import static org.monstermash.stats.DamageModifier.DamageMods.IMMUNE;
+import static org.monstermash.stats.DamageModifier.DamageMods.RESISTANT;
+import static org.monstermash.stats.DamageModifier.DamageMods.VULNERABLE;
 
 public class StatBlock {
     private static JDialog currentRenderWindow = null;
@@ -116,11 +128,11 @@ public class StatBlock {
         returnMe.add(getStatArea(), constraints);
         constraints.gridy++;
         returnMe.add(getNewSeparator(), constraints);
-//        constraints.gridy++;
-//        returnMe.add(getMiscAttributes(), constraints);
+        constraints.gridy++;
+        returnMe.add(getMiscAttributes(), constraints);
         constraints.gridy++;
         returnMe.add(getNewSeparator(), constraints);
-//        constraints.gridy++;
+        constraints.gridy++;
 //        returnMe.add(getAbilities(), constraints);
 //        constraints.gridy++;
 //        returnMe.add(getActions(), constraints);
@@ -248,6 +260,203 @@ public class StatBlock {
             return null;
         }
         return new JLabel(new ImageIcon(img));
+    }
+
+    private static JPanel getMiscAttributes() {
+        JPanel returnMe = new JPanel();
+        returnMe.setLayout(new BoxLayout(returnMe, BoxLayout.Y_AXIS));
+        returnMe.setOpaque(false);
+        //Saving Throws
+        List<String> savingThrows = new LinkedList<>();
+        if (3 != 0) {
+            savingThrows.add(String.format("%s %s",
+                "Str",
+                "+3"
+            ));
+        }
+        if (0 != 0) {
+            savingThrows.add(String.format("%s %s",
+                "Dex",
+                "0"
+            ));
+        }
+        if (-3 != 0) {
+            savingThrows.add(String.format("%s %s",
+                "Con",
+                "-3"
+            ));
+        }
+        if (0 != 0) {
+            savingThrows.add(String.format("%s %s",
+                "Int",
+                "0"
+            ));
+        }
+        if (0 != 0) {
+            savingThrows.add(String.format("%s %s",
+                "Wis",
+                "0"
+            ));
+        }
+        if (0 != 0) {
+            savingThrows.add(String.format("%s %s",
+                "Cha",
+                "0"
+            ));
+        }
+        if (savingThrows.size() > 0) {
+            JPanel panel = new JPanel();
+            panel.setOpaque(false);
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+            String string = savingThrows.stream().collect(Collectors.joining(", "));
+            JLabelBrownOverview label = new JLabelBrownOverview("Saving Throws", string);
+            panel.add(label);
+            panel.add(Box.createHorizontalGlue());
+            returnMe.add(panel);
+        }
+        //Misc
+        List<Skill> skillModifiers = List.of(
+            new Skill("Akrobacie", 2),
+            new Skill("Skrývání", 3),
+            new Skill("Vnímání", 1)
+        );
+
+        if (skillModifiers.size() > 0) {
+            JPanel panel = new JPanel();
+            panel.setOpaque(false);
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+            String joinedSkills = skillModifiers.stream().map(Skill::asText).collect(Collectors.joining(", "));
+            JLabelBrownOverview label = new JLabelBrownOverview("Skills: ", joinedSkills);
+            panel.add(label);
+            panel.add(Box.createHorizontalGlue());
+            returnMe.add(panel);
+        }
+        List<DamageModifier> damageImmunities = List.of(
+            new DamageModifier(IMMUNE, DamageModifier.ModifierType.DAMAGE, "Radiant"),
+            new DamageModifier(IMMUNE, DamageModifier.ModifierType.DAMAGE, "Fire"),
+            new DamageModifier(IMMUNE, DamageModifier.ModifierType.DAMAGE, "Crushing")
+        );
+        List<DamageModifier> damageResistances = List.of(
+            new DamageModifier(RESISTANT, DamageModifier.ModifierType.DAMAGE, "Necrotic")
+        );
+        List<DamageModifier> damageVulnerabilities = List.of(
+            new DamageModifier(VULNERABLE, DamageModifier.ModifierType.DAMAGE, "Frost")
+        );
+        List<DamageModifier> conditionImmunities = List.of(
+            new DamageModifier(IMMUNE, DamageModifier.ModifierType.CONDITION, "Prone")
+        );
+        List<DamageModifier> conditionResistances = List.of(
+            new DamageModifier(RESISTANT, DamageModifier.ModifierType.CONDITION, "Petrified")
+        );
+        List<DamageModifier> conditionVulnerabilities = List.of(
+            new DamageModifier(VULNERABLE, DamageModifier.ModifierType.CONDITION, "Blinded")
+        );
+
+        //Print Modifiers
+        if (damageImmunities.size() > 0) {
+            JPanel panel = new JPanel();
+            panel.setOpaque(false);
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+            String string = damageImmunities.stream().map(DamageModifier::asText).collect(Collectors.joining(", "));
+            JLabelBrownOverview data = new JLabelBrownOverview("Damage Immunities", string);
+            panel.add(data);
+            panel.add(Box.createHorizontalGlue());
+            returnMe.add(panel);
+        }
+        if (damageResistances.size() > 0) {
+            JPanel panel = new JPanel();
+            panel.setOpaque(false);
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+            String string = damageResistances.stream().map(DamageModifier::asText).collect(Collectors.joining(", "));
+            JLabelBrownOverview data = new JLabelBrownOverview("Damage Resistances", string);
+            panel.add(data);
+            panel.add(Box.createHorizontalGlue());
+            returnMe.add(panel);
+        }
+        if (damageVulnerabilities.size() > 0) {
+            JPanel panel = new JPanel();
+            panel.setOpaque(false);
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+            String string = damageVulnerabilities.stream().map(DamageModifier::asText).collect(Collectors.joining(", "));
+            JLabelBrownOverview data = new JLabelBrownOverview("Damage Vulnerabilities", string);
+            panel.add(data);
+            panel.add(Box.createHorizontalGlue());
+            returnMe.add(panel);
+        }
+        if (conditionImmunities.size() > 0) {
+            JPanel panel = new JPanel();
+            panel.setOpaque(false);
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+            String string = conditionImmunities.stream().map(DamageModifier::asText).collect(Collectors.joining(", "));
+            JLabelBrownOverview data = new JLabelBrownOverview("Condition Immunities", string);
+            panel.add(data);
+            panel.add(Box.createHorizontalGlue());
+            returnMe.add(panel);
+        }
+        if (conditionResistances.size() > 0) {
+            JPanel panel = new JPanel();
+            panel.setOpaque(false);
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+            String string = conditionResistances.stream().map(DamageModifier::asText).collect(Collectors.joining(", "));
+            JLabelBrownOverview data = new JLabelBrownOverview("Condition Resistances", string);
+            panel.add(data);
+            panel.add(Box.createHorizontalGlue());
+            returnMe.add(panel);
+        }
+        if (conditionVulnerabilities.size() > 0) {
+            JPanel panel = new JPanel();
+            panel.setOpaque(false);
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+            String string = conditionVulnerabilities.stream().map(DamageModifier::asText).collect(Collectors.joining(", "));
+            JLabelBrownOverview data = new JLabelBrownOverview("Condition Vulnerabilities", string);
+            panel.add(data);
+            panel.add(Box.createHorizontalGlue());
+            returnMe.add(panel);
+        }
+        //Senses
+        List<Attribute> senses = List.of(
+            new Sense("Bullshitsense", 180)
+        );
+        if (senses.size() > 0) {
+            JPanel panel = new JPanel();
+            panel.setOpaque(false);
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+            String string = senses.stream().map(Attribute::asText).collect(Collectors.joining(", "));
+            JLabelBrownOverview data = new JLabelBrownOverview("Senses", string);
+            panel.add(data);
+            panel.add(Box.createHorizontalGlue());
+            returnMe.add(panel);
+        }
+        //Languages
+        List<Language> languages = List.of(
+            new Language("Obecná"),
+            new Language("Tail tongue")
+        );
+        if (languages.size() > 0) {
+            JPanel panel = new JPanel();
+            panel.setOpaque(false);
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+            String string = languages.stream().map(Attribute::asText).collect(Collectors.joining(", "));
+            JLabelBrownOverview data = new JLabelBrownOverview("Languages", string);
+            panel.add(data);
+            panel.add(Box.createHorizontalGlue());
+            returnMe.add(panel);
+        }
+        if (true) {
+            JPanel panel = new JPanel();
+            panel.setOpaque(false);
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+            String string = " ";
+            String challengeRatingString = String.format("%s (%d XP)",
+                "8",
+                1156);
+            string += challengeRatingString;
+            JLabelBrownOverview data = new JLabelBrownOverview("Challenge", string);
+            panel.add(data);
+            panel.add(Box.createHorizontalGlue());
+            returnMe.add(panel);
+        }
+        return returnMe;
     }
 
     private static JPanel getNewEndCap() {
