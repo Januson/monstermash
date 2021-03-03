@@ -3,21 +3,26 @@ package org.monstermash;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -30,13 +35,44 @@ import java.io.IOException;
 public class MonsterMash extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         primaryStage.setTitle("MonsterMash!");
-        GridPane pane = new GridPane();
-        pane.setAlignment(Pos.CENTER);
+        FlowPane pane = new FlowPane(Orientation.VERTICAL);
+//        GridPane pane = new GridPane();
+        pane.setAlignment(Pos.TOP_LEFT);
         pane.setHgap(10);
         pane.setVgap(10);
         pane.setPadding(new Insets(25, 25, 25, 25));
+
+        pane.getChildren().add(header());
+        pane.getChildren().add(stats());
+        pane.getChildren().add(speed());
+
+//        Button generate = new Button("Generate");
+//        HBox hbox = new HBox(10);
+//        hbox.setAlignment(Pos.BOTTOM_RIGHT);
+//        hbox.getChildren().add(generate);
+//        pane.add(hbox, 1, 4);
+//
+//        generate.setOnAction(t -> {
+//            WritableImage snapshot = pane.snapshot(new SnapshotParameters(), null);
+//            captureAndSaveDisplay(snapshot);
+//        });
+//
+//        pane.add(tabs(), 1, 6);
+
+        Scene scene = new Scene(pane, 600, 550);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+    }
+
+    public Pane header() {
+        GridPane pane = new GridPane();
+        pane.setAlignment(Pos.CENTER_LEFT);
+        pane.setHgap(10);
+        pane.setVgap(10);
+//        pane.setPadding(new Insets(25, 25, 25, 25));
 
         Text sceneTitle = new Text("Monster Stats");
         sceneTitle.setFont(Font.font("Arial", FontWeight.NORMAL, 20));
@@ -58,36 +94,87 @@ public class MonsterMash extends Application {
         HBox typeSize = new HBox(sizeChoice, typeChoice);
         pane.add(typeSize, 1, 2);
 
-        Label percent = new Label("% Tax:");
-        pane.add(percent, 0, 3);
-        final TextField percentField = new TextField();
-        pane.add(percentField, 1, 3);
+        return pane;
+    }
 
-        Button calculateButton = new Button("Calculate");
-        HBox hbox = new HBox(10);
-        hbox.setAlignment(Pos.BOTTOM_RIGHT);
-        hbox.getChildren().add(calculateButton);
-        pane.add(hbox, 1, 4);
+    private Pane stats() {
+        GridPane pane = new GridPane();
+        pane.setAlignment(Pos.CENTER_LEFT);
+        pane.setHgap(10);
+        pane.setVgap(10);
 
-        final Text taxMessage = new Text();
-        pane.add(taxMessage, 1, 6);
+        Label fortitudeLabel = new Label("Zdatnost:");
+        pane.add(fortitudeLabel, 0, 0);
+        Spinner<Integer> fortitude = new Spinner<>(-1, 5, 0);
+        fortitude.setPrefWidth(50);
+        pane.add(fortitude, 0, 1);
 
-        calculateButton.setOnAction(t -> {
-//            Double income = Double.parseDouble(nameField.getText());
-//            Double tax = Double.parseDouble(percentField.getText()) / 100;
-            taxMessage.setText("Tax incurred:" + "income * tax");
-            WritableImage snapshot = pane.snapshot(new SnapshotParameters(), null);
-//            pane.getChildren().add(new ImageView(snapshot));
-//            System.out.println(vbox.getChildren().size());
-            captureAndSaveDisplay(snapshot);
-        });
+        Label reflexesLabel = new Label("Reflexes");
+        pane.add(reflexesLabel, 1, 0);
+        Spinner<Integer> reflexes = new Spinner<>(-1, 5, 0);
+        reflexes.setPrefWidth(50);
+        pane.add(reflexes, 1, 1);
 
-        pane.add(tabs(), 1, 7);
+        Label intelligenceLabel = new Label("Intelligence");
+        pane.add(intelligenceLabel, 2, 0);
+        Spinner<Integer> intelligence = new Spinner<>(-1, 5, 0);
+        intelligence.setPrefWidth(50);
+        pane.add(intelligence, 2, 1);
 
-        Scene scene = new Scene(pane, 600, 550);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        Label insightLabel = new Label("Insight");
+        pane.add(insightLabel, 3, 0);
+        Spinner<Integer> insight = new Spinner<>(-1, 5, 0);
+        insight.setPrefWidth(50);
+        pane.add(insight, 3, 1);
 
+        return pane;
+    }
+
+    private Pane speed() {
+        GridPane pane = new GridPane();
+        pane.setAlignment(Pos.CENTER);
+        pane.setHgap(10);
+        pane.setVgap(10);
+
+        Label speedLabel = new Label("Speed:");
+        pane.add(speedLabel, 0, 0);
+        Spinner<Integer> speed = new Spinner<>(0, 1000, 0, 5);
+        speed.setPrefWidth(50);
+        pane.add(speed, 0, 1);
+
+        Label swimLabel = new Label("Swim");
+        pane.add(swimLabel, 1, 0);
+        Spinner<Integer> swim = new Spinner<>(0, 1000, 0, 5);
+        swim.setPrefWidth(50);
+        pane.add(swim, 1, 1);
+
+        Label burrowLabel = new Label("Burrow");
+        pane.add(burrowLabel, 2, 0);
+        Spinner<Integer> burrow = new Spinner<>(0, 1000, 0, 5);
+        burrow.setPrefWidth(50);
+        pane.add(burrow, 2, 1);
+
+
+        Label climbLabel = new Label("Climb");
+        pane.add(climbLabel, 3, 0);
+        Spinner<Integer> climb = new Spinner<>(0, 1000, 0, 5);
+        climb.setPrefWidth(50);
+        pane.add(climb, 3, 1);
+
+        Label flightLabel = new Label("Flight");
+        pane.add(flightLabel, 4, 0);
+        Spinner<Integer> flight = new Spinner<>(0, 1000, 0, 5);
+        flight.setPrefWidth(50);
+        pane.add(flight, 4, 1);
+
+        Label hoverLabel = new Label("Hover");
+        pane.add(hoverLabel, 5, 0);
+        CheckBox hover = new CheckBox();
+//        Spinner<Integer> hover = new Spinner<>(-1, 5, 0);
+        hover.setPrefWidth(50);
+        pane.add(hover, 5, 1);
+
+        return pane;
     }
 
     public enum Size {
