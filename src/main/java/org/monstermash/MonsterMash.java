@@ -31,27 +31,14 @@ public class MonsterMash extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-//        URL sceneFile = Paths.get("./src/main/resources/fxml/scene.fxml").toUri().toURL();
-////        URL sceneFile = MonsterMash.class.getResource("/fxml/scene.fxml");
-//        Parent root = FXMLLoader.load(sceneFile);
-//
-//        Scene scene = new Scene(root);
-//        URL stylesFile = Paths.get("./src/main/resources/styles/styles.css").toUri().toURL();
-//        scene.getStylesheets().add(stylesFile.toExternalForm());
-//
-//        stage.setTitle("JavaFX and Gradle");
-//        stage.setScene(scene);
-//        stage.show();
-
-
-        primaryStage.setTitle("JavaFX Tax Calculator");
+        primaryStage.setTitle("MonsterMash!");
         GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
         pane.setHgap(10);
         pane.setVgap(10);
         pane.setPadding(new Insets(25, 25, 25, 25));
 
-        Text sceneTitle = new Text("Tax Calculator");
+        Text sceneTitle = new Text("Monster Stats");
         sceneTitle.setFont(Font.font("Arial", FontWeight.NORMAL, 20));
         pane.add(sceneTitle, 0, 0, 2, 1);
 
