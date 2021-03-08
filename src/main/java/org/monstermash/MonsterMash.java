@@ -9,10 +9,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -22,7 +27,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -59,9 +63,13 @@ public class MonsterMash extends Application {
 //            captureAndSaveDisplay(snapshot);
 //        });
 //
-//        pane.add(tabs(), 1, 6);
+//        pane.getChildren().add(tabs());
+        pane.getChildren().add(defense1());
 
-        Scene scene = new Scene(pane, 600, 550);
+        FlowPane main = new FlowPane(Orientation.VERTICAL);
+        main.getChildren().add(createMenuBar());
+        main.getChildren().add(pane);
+        Scene scene = new Scene(main, 600, 550);
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -78,10 +86,14 @@ public class MonsterMash extends Application {
         sceneTitle.setFont(Font.font("Arial", FontWeight.NORMAL, 20));
         pane.add(sceneTitle, 0, 0, 2, 1);
 
-        Label name = new Label("Name:");
-        pane.add(name, 0, 1);
-        final TextField nameField = new TextField();
-        pane.add(nameField, 1, 1);
+        Label nameLabel = new Label("Name:");
+        pane.add(nameLabel, 0, 1);
+        final TextField name = new TextField();
+        name.textProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("textfield changed from " + oldValue + " to " + newValue);
+        });
+
+        pane.add(name, 1, 1);
 
         Label type = new Label("Type:");
         pane.add(type, 0, 2);
@@ -107,6 +119,9 @@ public class MonsterMash extends Application {
         pane.add(fortitudeLabel, 0, 0);
         Spinner<Integer> fortitude = new Spinner<>(-1, 5, 0);
         fortitude.setPrefWidth(50);
+        fortitude.valueProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("Fortitude changed from " + oldValue + " to " + newValue);
+        });
         pane.add(fortitude, 0, 1);
 
         Label reflexesLabel = new Label("Reflexes");
@@ -206,7 +221,75 @@ public class MonsterMash extends Application {
         return tabPane;
     }
 
-    public void captureAndSaveDisplay(WritableImage writableImage){
+    private TabPane defense1() {
+        TabPane tabPane = new TabPane();
+
+        Tab conditions = new Tab("Conditions", conditions());
+        Tab damage = new Tab("Damage", damage());
+
+        tabPane.getTabs().add(conditions);
+        tabPane.getTabs().add(damage);
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        return tabPane;
+    }
+
+    private ListView conditions() {
+        ListView<Pane> listView = new ListView<>();
+
+        listView.getItems().add(item("Blinded"));
+        listView.getItems().add(item("Exhausted"));
+        listView.getItems().add(item("Prone"));
+        listView.setPrefWidth(10);
+        listView.setPrefHeight(80);
+        return listView;
+    }
+
+    private ListView damage() {
+        ListView<Pane> listView = new ListView<>();
+
+        listView.getItems().add(item("Acid"));
+        listView.getItems().add(item("Poison"));
+        listView.getItems().add(item("Necrotic"));
+        listView.setPrefWidth(10);
+        listView.setPrefHeight(80);
+        return listView;
+    }
+
+    private Pane item(final String name) {
+        GridPane gridPane = new GridPane();
+        gridPane.add(new Label(name), 0, 0);
+        gridPane.add(drop(), 1, 0);
+        return new HBox(new Label(name));
+    }
+
+    private ChoiceBox<State> drop() {
+        final var typeChoice = new ChoiceBox<State>();
+        typeChoice.getItems().setAll(State.values());
+        return typeChoice;
+    }
+
+    enum State{
+        Immunity,
+        Resistance,
+        Vulnerability,
+        None,
+    }
+
+    private HBox radios() {
+        final ToggleGroup group = new ToggleGroup();
+        final var immune = new RadioButton("Immune");
+        immune.setToggleGroup(group);
+        final var resistant = new RadioButton("Resistant");
+        resistant.setToggleGroup(group);
+        final var normal = new RadioButton("Normal");
+        normal.setToggleGroup(group);
+        normal.setSelected(true);
+        final var vulnerable = new RadioButton("Vulnerable");
+        vulnerable.setToggleGroup(group);
+        return new HBox(immune, resistant, normal, vulnerable);
+    }
+
+    public void captureAndSaveDisplay(WritableImage writableImage) {
         FileChooser fileChooser = new FileChooser();
 
         //Set extension filter
@@ -214,8 +297,7 @@ public class MonsterMash extends Application {
 
         //Prompt user to select a file
         File file = fileChooser.showSaveDialog(null);
-
-        if(file != null){
+        if (file != null) {
             try {
                 //Pad the capture area
 //                WritableImage writableImage = new WritableImage((int) getWidth() + 20,
@@ -224,8 +306,17 @@ public class MonsterMash extends Application {
                 RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
                 //Write the snapshot to the chosen file
                 ImageIO.write(renderedImage, "png", file);
-            } catch (IOException ex) { ex.printStackTrace(); }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
+    }
+
+    public Pane createMenuBar() {
+        final var menuBar = new MenuBar();
+        final var fileMenu = new Menu("File");
+        menuBar.getMenus().add(fileMenu);
+        return new VBox(menuBar);
     }
 
     public static void main(String[] args) {
