@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "org.example"
-version = "1.0-SNAPSHOT"
+version = "0.1.0"
 
 repositories {
     mavenCentral()
@@ -31,7 +31,6 @@ dependencies {
 tasks.register("copyResources") {
     dependsOn(tasks.compileJava)
     doLast {
-        println("taskX")
         copy {
             from("src/main/resources")
             into("$buildDir/classes/java/main")
@@ -62,15 +61,6 @@ javafx {
     modules("javafx.controls", "javafx.fxml", "javafx.swing")
 }
 
-//mainClassName = "$moduleName/org.openjfx.MainApp"
-//
-//jlink {
-//    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
-//    launcher {
-//        name = 'hellofx'
-//    }
-//}
-
 nativeImage {
     graalVmHome = System.getenv("JAVA_HOME")
     mainClass = "org.monstermash.MonsterMash"
@@ -83,3 +73,61 @@ nativeImage {
         "--report-unsupported-elements-at-runtime"
     )
 }
+
+tasks.register<Zip>("zipExecutable") {
+    dependsOn(tasks["nativeImage"])
+
+    archiveFileName.set("monstermash.zip")
+    destinationDirectory.set(file("$buildDir/dist"))
+
+    from("$buildDir/graal")
+}
+
+//val launcherName = "monstermash"
+//val imageDirPath = "$buildDir/${launcherName}-image"
+//val imageZipPath = "$buildDir/${launcherName}-image.zip"
+//
+////tasks.withType<Jar> {
+////    manifest {
+////        attributes["Main-Class"] = "org.monstermash.MonsterMash"
+////    }
+////    from(sourceSets.main.get().output)
+////
+////    dependsOn(configurations.runtimeClasspath)
+////    from({
+////        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+////    })
+////}
+//
+//jlink {
+//    imageDir.set(file(imageDirPath))
+//    imageZip.set(project.file("${project.buildDir}/image-zip/monstermash.zip"))
+//    options.addAll("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
+//    launcher {
+//        name = launcherName
+//        jvmArgs.addAll(listOf(
+//            "--enable-preview",
+//            "-Dfile.encoding=UTF-8"
+//        ))
+//        windowsScriptTemplate = file("windowsScriptTemplate.txt")
+//    }
+//    forceMerge("log4j-api")
+//    jpackage {
+//        val os = org.gradle.internal.os.OperatingSystem.current()
+//        if(os.isWindows) {
+//            installerOptions.addAll(listOf("--win-per-user-install", "--win-dir-chooser", "--win-menu"))
+//        } else {
+//            installerType = "deb" // "rpm"
+//        }
+//        installerOptions.addAll(listOf("--verbose"))
+//    }
+//}
+//
+//tasks.jlink {
+//    doLast {
+//        copy {
+//            from("src/main/resources")
+//            into("$imageDirPath/bin")
+//        }
+//    }
+//}
