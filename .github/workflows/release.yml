@@ -1,9 +1,14 @@
-name: Java CI with Gradle
+name: Native image release pipeline
 
+#on:
+#  push:
+#    tags:
+#      - 'v*'
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   create-release:
