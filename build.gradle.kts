@@ -94,7 +94,7 @@ tasks.register<Zip>("zipExecutable") {
 //val launcherName = "monstermash"
 //val imageDirPath = "$buildDir/${launcherName}-image"
 //val imageZipPath = "$buildDir/${launcherName}-image.zip"
-//
+
 ////tasks.withType<Jar> {
 ////    manifest {
 ////        attributes["Main-Class"] = "org.monstermash.MonsterMash"
@@ -106,7 +106,7 @@ tasks.register<Zip>("zipExecutable") {
 ////        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
 ////    })
 ////}
-//
+
 //jlink {
 //    imageDir.set(file(imageDirPath))
 //    imageZip.set(project.file("${project.buildDir}/image-zip/monstermash.zip"))
