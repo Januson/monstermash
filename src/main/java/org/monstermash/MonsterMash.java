@@ -29,6 +29,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.monstermash.statblock.StatBlock;
 
 import javax.imageio.ImageIO;
 import java.awt.image.RenderedImage;
@@ -65,6 +66,7 @@ public class MonsterMash extends Application {
 //
 //        pane.getChildren().add(tabs());
         pane.getChildren().add(defense1());
+        pane.getChildren().add(StatBlock.renderImage());
 
         FlowPane main = new FlowPane(Orientation.VERTICAL);
         main.getChildren().add(createMenuBar());
@@ -320,7 +322,7 @@ public class MonsterMash extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args);
+        Application.launch(MonsterMash.class, args);
     }
 
 }
