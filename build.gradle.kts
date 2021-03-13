@@ -2,8 +2,8 @@ plugins {
     application
     id("org.openjfx.javafxplugin") version "0.0.9"
 //    id("org.beryx.jlink") version "2.23.3"
-    id("org.mikeneck.graalvm-native-image") version "v1.2.0"
-//    id("com.palantir.graal") version "0.7.1"
+//    id("org.mikeneck.graalvm-native-image") version "v1.2.0"
+    id("com.palantir.graal") version "0.7.1"
 }
 
 group = "org.example"
@@ -62,25 +62,25 @@ javafx {
     modules("javafx.controls", "javafx.fxml", "javafx.swing")
 }
 
-nativeImage {
-    graalVmHome = System.getenv("JAVA_HOME")
-    mainClass = "org.monstermash.MonsterMash"
-    executableName = "MonsterMash!"
-    outputDirectory = file("$buildDir/bin")
-    arguments(
-        "--no-fallback",
-        "--enable-all-security-services",
-//        "--initialize-at-run-time=com.example.runtime",
-        "--report-unsupported-elements-at-runtime"
-    )
-}
-
-//graal {
-//    graalVersion("21.0.0.2")
-//    outputName("monstermash")
-//    mainClass("org.monstermash.MonsterMash")
-//    javaVersion("11")
+//nativeImage {
+//    graalVmHome = System.getenv("JAVA_HOME")
+//    mainClass = "org.monstermash.MonsterMash"
+//    executableName = "MonsterMash!"
+//    outputDirectory = file("$buildDir/bin")
+//    arguments(
+//        "--no-fallback",
+//        "--enable-all-security-services",
+////        "--initialize-at-run-time=com.example.runtime",
+//        "--report-unsupported-elements-at-runtime"
+//    )
 //}
+
+graal {
+    graalVersion("21.0.0")
+    outputName("monstermash")
+    mainClass("org.monstermash.MonsterMash")
+    javaVersion("11")
+}
 
 tasks.register<Zip>("zipExecutable") {
     dependsOn(tasks["nativeImage"])
