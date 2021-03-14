@@ -88,4 +88,4 @@ jobs:
         with:
           files: |
             ./build/dist/*.zip
-            ./build/dist/*.exe
+#            ./build/dist/*.exe
