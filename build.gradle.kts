@@ -15,7 +15,8 @@ repositories {
     mavenCentral()
 }
 
-val currentOS: DefaultOperatingSystem = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.getCurrentOperatingSystem()
+val currentOS: DefaultOperatingSystem =
+    org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.getCurrentOperatingSystem()
 val platform: String = when {
     currentOS.isWindows -> "win"
     currentOS.isLinux -> "linux"
@@ -51,6 +52,15 @@ tasks.withType<Test> {
 application {
     mainModule.set("monstermash")
     mainClass.set("org.monstermash.MonsterMash")
+}
+
+val run by tasks.existing(JavaExec::class) {
+    doFirst {
+        copy {
+            from("src/main/resources")
+            into("$buildDir/classes/java/main")
+        }
+    }
 }
 
 val launcherName = "monstermash"
@@ -134,5 +144,5 @@ val zipIt by tasks.registering {
 //            dependsOn(zipLinuxRelease)
 //        }
         else -> throw BuildCancelledException("Unsupported platform! $currentOS")
-   }
+    }
 }
