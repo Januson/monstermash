@@ -1,3 +1,5 @@
+import org.gradle.nativeplatform.platform.internal.DefaultOperatingSystem
+
 plugins {
     application
 //    id("org.openjfx.javafxplugin") version "0.0.9"
@@ -13,17 +15,14 @@ repositories {
     mavenCentral()
 }
 
-//def currentOS = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.currentOperatingSystem;
-//def platform
-//        if (currentOS.isWindows()) {
-//            platform = 'win'
-//        } else if (currentOS.isLinux()) {
-//            platform = 'linux'
-//        } else if (currentOS.isMacOsX()) {
-//            platform = 'mac'
-//        }
+val currentOS: DefaultOperatingSystem = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.getCurrentOperatingSystem()
+val platform: String = when {
+    currentOS.isWindows -> "win"
+    currentOS.isLinux -> "linux"
+    currentOS.isMacOsX -> "mac"
+    else -> throw BuildCancelledException("Unsupported platform! $currentOS")
+}
 
-val platform = "win"
 val javafxVersion = "15.0.1"
 val log4jVersion = "2.14.0"
 val junitVersion = "5.7.0"
@@ -55,20 +54,8 @@ application {
 }
 
 val launcherName = "monstermash"
-val imageDirPath = "$buildDir/dist/${launcherName}"
-val imageZipPath = "$buildDir/dist/${launcherName}.zip"
-
-////tasks.withType<Jar> {
-////    manifest {
-////        attributes["Main-Class"] = "org.monstermash.MonsterMash"
-////    }
-////    from(sourceSets.main.get().output)
-////
-////    dependsOn(configurations.runtimeClasspath)
-////    from({
-////        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
-////    })
-////}
+val imageDirPath = "$buildDir/${launcherName}"
+val imageZipPath = "$buildDir/${launcherName}.zip"
 
 jlink {
     imageDir.set(file(imageDirPath))
@@ -86,13 +73,12 @@ jlink {
     }
     forceMerge("log4j-api")
     jpackage {
-        val os = org.gradle.internal.os.OperatingSystem.current()
         val imgType = when {
-            os.isWindows -> "ico"
+            currentOS.isWindows -> "ico"
             else -> "png"
         }
         icon = "src/main/resources/images/icon.$imgType"
-        if (os.isWindows) {
+        if (currentOS.isWindows) {
             installerOptions.addAll(
                 listOf(
                     "--win-per-user-install",
@@ -108,11 +94,45 @@ jlink {
     }
 }
 
-//tasks.jlink {
-//    doLast {
-//        copy {
-//            from("src/main/resources")
-//            into("$imageDirPath/bin")
+val zipLinuxRelease by tasks.registering(Tar::class) {
+    dependsOn(tasks["jpackage"])
+
+    archiveFileName.set("monstermash-${project.version}-linux.tar.gz")
+    destinationDirectory.set(file("$buildDir/dist"))
+    compression = Compression.GZIP
+
+    from("$buildDir/jpackage/monstermash")
+    into("monstermash")
+}
+
+val zipWinRelease by tasks.registering(Zip::class) {
+    dependsOn(tasks["jpackage"])
+
+    archiveFileName.set("monstermash-${project.version}-win.zip")
+    destinationDirectory.set(file("$buildDir/dist"))
+
+    from("$buildDir/jpackage/monstermash")
+    into("monstermash")
+}
+val copyWinInstaller by tasks.registering(Copy::class) {
+    dependsOn(tasks["jpackage"])
+
+    from("$buildDir/jpackage/monstermash")
+    include("*.exe")
+    into("$buildDir/dist")
+}
+
+val zipIt by tasks.registering {
+    description = "Prepares artefacts for relese"
+    when {
+        currentOS.isWindows -> {
+            dependsOn(zipWinRelease)
+            dependsOn(copyWinInstaller)
+        }
+        // FIXME
+//        currentOS.isLinux -> {
+//            dependsOn(zipLinuxRelease)
 //        }
-//    }
-//}
+        else -> throw BuildCancelledException("Unsupported platform! $currentOS")
+   }
+}
