@@ -76,21 +76,35 @@ jlink {
     options.addAll("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
     launcher {
         name = launcherName
-        jvmArgs.addAll(listOf(
-            "--enable-preview",
-            "-Dfile.encoding=UTF-8"
-        ))
+        jvmArgs.addAll(
+            listOf(
+                "--enable-preview",
+                "-Dfile.encoding=UTF-8"
+            )
+        )
         windowsScriptTemplate = file("windowsScriptTemplate.txt")
     }
     forceMerge("log4j-api")
     jpackage {
         val os = org.gradle.internal.os.OperatingSystem.current()
-        if(os.isWindows) {
-            installerOptions.addAll(listOf("--win-per-user-install", "--win-dir-chooser", "--win-menu", "--win-shortcut"))
+        val imgType = when {
+            os.isWindows -> "ico"
+            else -> "png"
+        }
+        icon = "src/main/resources/images/icon.$imgType"
+        if (os.isWindows) {
+            installerOptions.addAll(
+                listOf(
+                    "--win-per-user-install",
+                    "--win-dir-chooser",
+                    "--win-menu",
+                    "--win-shortcut"
+                )
+            )
         } else {
             installerType = "deb" // "rpm"
         }
-        installerOptions.addAll(listOf("--verbose"))
+//        installerOptions.addAll(listOf("--verbose"))
     }
 }
 
