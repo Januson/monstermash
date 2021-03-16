@@ -11,7 +11,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -37,18 +40,6 @@ public class MonsterMash extends Application {
     public void start(Stage primaryStage) {
         Locale.setDefault(new Locale("cs"));
         primaryStage.setTitle("MonsterMash!");
-        FlowPane content = new FlowPane(Orientation.VERTICAL);
-
-        content.getChildren().add(createMenuBar(primaryStage));
-
-        Scene scene = new Scene(content, 600, 550);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-
-    public void starst(Stage primaryStage) {
-        Locale.setDefault(new Locale("cs"));
-        primaryStage.setTitle("MonsterMash!");
         FlowPane pane = new FlowPane(Orientation.VERTICAL);
 //        GridPane pane = new GridPane();
         pane.setAlignment(Pos.TOP_LEFT);
@@ -59,19 +50,6 @@ public class MonsterMash extends Application {
         pane.getChildren().add(header());
         pane.getChildren().add(stats());
         pane.getChildren().add(speed());
-
-//        Button generate = new Button("Generate");
-//        HBox hbox = new HBox(10);
-//        hbox.setAlignment(Pos.BOTTOM_RIGHT);
-//        hbox.getChildren().add(generate);
-//        pane.add(hbox, 1, 4);
-//
-//        generate.setOnAction(t -> {
-//            WritableImage snapshot = pane.snapshot(new SnapshotParameters(), null);
-//            captureAndSaveDisplay(snapshot);
-//        });
-//
-//        pane.getChildren().add(tabs());
         pane.getChildren().add(defense1());
         pane.getChildren().add(StatBlock.renderImage());
 
@@ -321,10 +299,30 @@ public class MonsterMash extends Application {
 //    }
 
     public Pane createMenuBar(Stage primaryStage) {
+        final var fileMenu = new Menu("File");
+        final var item1 = new MenuItem("Export to...");
+        final var item2 = new MenuItem("Exit");
+        final var separator = new SeparatorMenuItem();
+
+        fileMenu.getItems().add(item1);
+        fileMenu.getItems().add(separator);
+        fileMenu.getItems().add(item2);
+
+        final var langMenu = new Menu("Language");
+        final var czech = new RadioMenuItem("Czech");
+        final var english = new RadioMenuItem("English");
+
+        final var toggleGroup = new ToggleGroup();
+        toggleGroup.getToggles().add(czech);
+        toggleGroup.getToggles().add(english);
+
+        langMenu.getItems().add(czech);
+        langMenu.getItems().add(english);
+
         final var menuBar = new MenuBar();
         menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
-        final var fileMenu = new Menu("File");
         menuBar.getMenus().add(fileMenu);
+        menuBar.getMenus().add(langMenu);
         return new VBox(menuBar);
     }
 
