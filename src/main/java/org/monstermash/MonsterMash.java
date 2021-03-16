@@ -35,12 +35,14 @@ import javax.imageio.ImageIO;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 
 public class MonsterMash extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        Locale.setDefault(new Locale("cs"));
         primaryStage.setTitle("MonsterMash!");
         FlowPane pane = new FlowPane(Orientation.VERTICAL);
 //        GridPane pane = new GridPane();
