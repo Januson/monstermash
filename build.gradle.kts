@@ -5,7 +5,7 @@ plugins {
 //    id("org.openjfx.javafxplugin") version "0.0.9"
     id("org.beryx.jlink") version "2.23.3"
 //    id("org.mikeneck.graalvm-native-image") version "v1.2.0"
-    id("com.palantir.graal") version "0.7.2"
+//    id("com.palantir.graal") version "0.7.2"
 }
 
 group = "org.example"
@@ -39,8 +39,8 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_15
+    targetCompatibility = JavaVersion.VERSION_15
     modularity.inferModulePath.set(true)
 }
 
@@ -144,20 +144,4 @@ val zipIt by tasks.registering {
 //        }
         else -> throw BuildCancelledException("Unsupported platform! $currentOS")
     }
-}
-
-graal {
-    graalVersion("21.0.0")
-    outputName("monstermash")
-    mainClass("org.monstermash.MonsterMash")
-    javaVersion("11")
-}
-
-val zipExecutable by tasks.registering(Zip::class) {
-    dependsOn(tasks["nativeImage"])
-
-    archiveFileName.set("monstermash.zip")
-    destinationDirectory.set(file("$buildDir/dist"))
-
-    from("$buildDir/graal")
 }
