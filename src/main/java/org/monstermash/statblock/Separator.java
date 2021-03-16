@@ -6,9 +6,9 @@ import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.imageio.ImageIO;
-import javax.swing.JLabel;
-import java.awt.image.BufferedImage;
+//import javax.imageio.ImageIO;
+//import javax.swing.JLabel;
+//import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;

@@ -10,14 +10,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import java.awt.Color;
-import java.awt.Dimension;
+//import javax.swing.JLabel;
+//import javax.swing.JPanel;
+//import java.awt.Color;
+//import java.awt.Dimension;
 
 public class StatBlock {
 //    private static final Logger LOG = LogManager.getLogger(StatBlock.class);
-    private static final Color TRANSPARENT_COLOR = new Color(238, 238, 238);
+//    private static final Color TRANSPARENT_COLOR = new Color(238, 238, 238);
 
     public static Pane renderImage() {
 //        if (currentRenderWindow != null) {
@@ -72,13 +72,13 @@ public class StatBlock {
         return new VBox(nameLabel, sizeTypeTag);
     }
 
-    private static JPanel getNewBuffer() {
-        JPanel buffer = new JPanel();
-        buffer.setOpaque(false);
-        buffer.setPreferredSize(new Dimension(100, 50));
-        buffer.setMinimumSize(buffer.getPreferredSize());
-        return buffer;
-    }
+//    private static JPanel getNewBuffer() {
+//        JPanel buffer = new JPanel();
+//        buffer.setOpaque(false);
+//        buffer.setPreferredSize(new Dimension(100, 50));
+//        buffer.setMinimumSize(buffer.getPreferredSize());
+//        return buffer;
+//    }
 
 //    public static Font titleFont(double fontSize) {
 //        return new Resource("alegreya/AlegreyaSC-Regular.otf")

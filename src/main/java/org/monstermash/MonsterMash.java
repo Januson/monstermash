@@ -1,7 +1,6 @@
 package org.monstermash;
 
 import javafx.application.Application;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -31,8 +30,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.monstermash.statblock.StatBlock;
 
-import javax.imageio.ImageIO;
-import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
@@ -293,28 +290,28 @@ public class MonsterMash extends Application {
         return new HBox(immune, resistant, normal, vulnerable);
     }
 
-    public void captureAndSaveDisplay(WritableImage writableImage) {
-        FileChooser fileChooser = new FileChooser();
-
-        //Set extension filter
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png files (*.png)", "*.png"));
-
-        //Prompt user to select a file
-        File file = fileChooser.showSaveDialog(null);
-        if (file != null) {
-            try {
-                //Pad the capture area
-//                WritableImage writableImage = new WritableImage((int) getWidth() + 20,
-//                    (int)getHeight() + 20);
-//                snapshot(null, writableImage);
-                RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
-                //Write the snapshot to the chosen file
-                ImageIO.write(renderedImage, "png", file);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
+//    public void captureAndSaveDisplay(WritableImage writableImage) {
+//        FileChooser fileChooser = new FileChooser();
+//
+//        //Set extension filter
+//        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png files (*.png)", "*.png"));
+//
+//        //Prompt user to select a file
+//        File file = fileChooser.showSaveDialog(null);
+//        if (file != null) {
+//            try {
+//                //Pad the capture area
+////                WritableImage writableImage = new WritableImage((int) getWidth() + 20,
+////                    (int)getHeight() + 20);
+////                snapshot(null, writableImage);
+////                RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+//                //Write the snapshot to the chosen file
+////                ImageIO.write(renderedImage, "png", file);
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//            }
+//        }
+//    }
 
     public Pane createMenuBar() {
         final var menuBar = new MenuBar();
