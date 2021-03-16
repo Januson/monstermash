@@ -17,7 +17,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -26,12 +25,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.monstermash.statblock.StatBlock;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Locale;
 
 
@@ -39,6 +35,18 @@ public class MonsterMash extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        Locale.setDefault(new Locale("cs"));
+        primaryStage.setTitle("MonsterMash!");
+        FlowPane content = new FlowPane(Orientation.VERTICAL);
+
+        content.getChildren().add(createMenuBar(primaryStage));
+
+        Scene scene = new Scene(content, 600, 550);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public void starst(Stage primaryStage) {
         Locale.setDefault(new Locale("cs"));
         primaryStage.setTitle("MonsterMash!");
         FlowPane pane = new FlowPane(Orientation.VERTICAL);
@@ -68,12 +76,11 @@ public class MonsterMash extends Application {
         pane.getChildren().add(StatBlock.renderImage());
 
         FlowPane main = new FlowPane(Orientation.VERTICAL);
-        main.getChildren().add(createMenuBar());
+        main.getChildren().add(createMenuBar(primaryStage));
         main.getChildren().add(pane);
         Scene scene = new Scene(main, 600, 550);
         primaryStage.setScene(scene);
         primaryStage.show();
-
     }
 
     public Pane header() {
@@ -313,8 +320,9 @@ public class MonsterMash extends Application {
 //        }
 //    }
 
-    public Pane createMenuBar() {
+    public Pane createMenuBar(Stage primaryStage) {
         final var menuBar = new MenuBar();
+        menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
         final var fileMenu = new Menu("File");
         menuBar.getMenus().add(fileMenu);
         return new VBox(menuBar);
