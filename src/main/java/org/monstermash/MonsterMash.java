@@ -1,10 +1,13 @@
 package org.monstermash;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -20,6 +23,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -28,38 +32,85 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.monstermash.statblock.StatBlock;
+import org.monstermash.ui.I18N;
 
 import java.util.Locale;
 
 
 public class MonsterMash extends Application {
 
+    /** number of language switches. */
+    private Integer numSwitches = 0;
+
     @Override
-    public void start(Stage primaryStage) {
-        Locale.setDefault(new Locale("cs"));
-        primaryStage.setTitle("MonsterMash!");
-        FlowPane pane = new FlowPane(Orientation.VERTICAL);
-//        GridPane pane = new GridPane();
-        pane.setAlignment(Pos.TOP_LEFT);
-        pane.setHgap(10);
-        pane.setVgap(10);
-        pane.setPadding(new Insets(25, 25, 25, 25));
+    public void start(Stage primaryStage) throws Exception {
 
-        pane.getChildren().add(header());
-        pane.getChildren().add(stats());
-        pane.getChildren().add(speed());
-        pane.getChildren().add(defense1());
-        pane.getChildren().add(StatBlock.renderImage());
+        primaryStage.titleProperty().bind(I18N.createStringBinding("window.title"));
 
-        FlowPane main = new FlowPane(Orientation.VERTICAL);
-        main.getChildren().add(createMenuBar(primaryStage));
-        main.getChildren().add(pane);
-        Scene scene = new Scene(main, 600, 550);
-        primaryStage.setScene(scene);
+        // create content
+        BorderPane content = new BorderPane();
+
+        // at the top two buttons
+        HBox hbox = new HBox();
+        hbox.setPadding(new Insets(5, 5, 5, 5));
+        hbox.setSpacing(5);
+
+        Button buttonEnglish = I18N.buttonForKey("button.english");
+        buttonEnglish.setOnAction((evt) -> switchLanguage(Locale.ENGLISH));
+        hbox.getChildren().add(buttonEnglish);
+
+        Button buttonGerman = I18N.buttonForKey("button.german");
+        buttonGerman.setOnAction((evt) -> switchLanguage(new Locale("cs", "CZ")));
+        hbox.getChildren().add(buttonGerman);
+
+        content.setTop(hbox);
+
+        // a label to display the number of changes, recalculating the text on every change
+        final Label label = I18N.labelForValue(() -> I18N.get("label.numSwitches", numSwitches));
+        content.setBottom(label);
+
+        primaryStage.setScene(new Scene(content, 400, 200));
         primaryStage.show();
     }
+
+    /**
+     * sets the given Locale in the I18N class and keeps count of the number of switches.
+     *
+     * @param locale
+     *         the new local to set
+     */
+    private void switchLanguage(Locale locale) {
+        numSwitches++;
+        I18N.setLocale(locale);
+    }
+
+//    @Override
+//    public void start(Stage primaryStage) {
+//        Locale.setDefault(new Locale("cs"));
+//        primaryStage.setTitle("MonsterMash!");
+//        FlowPane pane = new FlowPane(Orientation.VERTICAL);
+////        GridPane pane = new GridPane();
+//        pane.setAlignment(Pos.TOP_LEFT);
+//        pane.setHgap(10);
+//        pane.setVgap(10);
+//        pane.setPadding(new Insets(25, 25, 25, 25));
+//
+//        pane.getChildren().add(header());
+//        pane.getChildren().add(stats());
+//        pane.getChildren().add(speed());
+//        pane.getChildren().add(defense1());
+//        pane.getChildren().add(StatBlock.renderImage());
+//
+//        FlowPane main = new FlowPane(Orientation.VERTICAL);
+//        main.getChildren().add(createMenuBar(primaryStage));
+//        main.getChildren().add(pane);
+//        Scene scene = new Scene(main, 600, 550);
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
+//    }
 
     public Pane header() {
         GridPane pane = new GridPane();
@@ -300,13 +351,29 @@ public class MonsterMash extends Application {
 
     public Pane createMenuBar(Stage primaryStage) {
         final var fileMenu = new Menu("File");
-        final var item1 = new MenuItem("Export to...");
-        final var item2 = new MenuItem("Exit");
-        final var separator = new SeparatorMenuItem();
+        final var export = new MenuItem("Export to...");
+        final var settings = new MenuItem("Settings");
+        final var exit = new MenuItem("Exit");
 
-        fileMenu.getItems().add(item1);
-        fileMenu.getItems().add(separator);
-        fileMenu.getItems().add(item2);
+        fileMenu.getItems().add(export);
+        fileMenu.getItems().add(new SeparatorMenuItem());
+        fileMenu.getItems().add(settings);
+        fileMenu.getItems().add(new SeparatorMenuItem());
+        fileMenu.getItems().add(exit);
+        settings.setOnAction(
+            new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    final Stage dialog = new Stage();
+                    dialog.initModality(Modality.APPLICATION_MODAL);
+                    dialog.initOwner(primaryStage);
+                    VBox dialogVbox = new VBox(20);
+                    dialogVbox.getChildren().add(new Text("This is a Dialog"));
+                    Scene dialogScene = new Scene(dialogVbox, 300, 200);
+                    dialog.setScene(dialogScene);
+                    dialog.show();
+                }
+            });
 
         final var langMenu = new Menu("Language");
         final var czech = new RadioMenuItem("Czech");
