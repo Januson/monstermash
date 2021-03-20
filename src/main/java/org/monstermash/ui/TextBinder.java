@@ -2,6 +2,7 @@ package org.monstermash.ui;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.Property;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
@@ -61,4 +62,9 @@ public final class TextBinder {
         button.textProperty().bind(createStringBinding(key, args));
         return button;
     }
+
+    public void bind(Property<String> property, String key) {
+        property.bind(createStringBinding(key));
+    }
+
 }

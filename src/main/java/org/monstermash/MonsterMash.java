@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -23,6 +24,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -32,48 +34,21 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.monstermash.statblock.StatBlock;
 import org.monstermash.ui.Language;
 import org.monstermash.ui.Languages;
 import org.monstermash.ui.Messages;
 import org.monstermash.ui.TextBinder;
+
+import java.util.Locale;
 
 
 public class MonsterMash extends Application {
 
     private Integer numSwitches = 0;
     private Languages languages = new Languages();
-
-    @Override
-    public void start(Stage primaryStage) {
-        final var messages = new Messages(languages);
-        final var binder = new TextBinder(languages, messages);
-        primaryStage.titleProperty().bind(binder.createStringBinding("window.title"));
-
-        // create content
-        BorderPane content = new BorderPane();
-
-        // at the top two buttons
-        HBox hbox = new HBox();
-        hbox.setPadding(new Insets(5, 5, 5, 5));
-        hbox.setSpacing(5);
-
-        Button buttonEnglish = binder.buttonForKey("button.english");
-        buttonEnglish.setOnAction((evt) -> switchLanguage(Language.ENGLISH));
-        hbox.getChildren().add(buttonEnglish);
-
-        Button buttonGerman = binder.buttonForKey("button.german");
-        buttonGerman.setOnAction((evt) -> switchLanguage(Language.CZECH));
-        hbox.getChildren().add(buttonGerman);
-
-        content.setTop(hbox);
-
-        // a label to display the number of changes, recalculating the text on every change
-        final Label label = binder.labelForValue(() -> messages.get("label.numSwitches", numSwitches));
-        content.setBottom(label);
-
-        primaryStage.setScene(new Scene(content, 400, 200));
-        primaryStage.show();
-    }
+    private Messages messages = new Messages(languages);
+    private TextBinder binder = new TextBinder(languages, messages);
 
     /**
      * sets the given Locale in the I18N class and keeps count of the number of switches.
@@ -85,30 +60,30 @@ public class MonsterMash extends Application {
         this.languages.switchTo(language);
     }
 
-//    @Override
-//    public void start(Stage primaryStage) {
-//        Locale.setDefault(new Locale("cs"));
-//        primaryStage.setTitle("MonsterMash!");
-//        FlowPane pane = new FlowPane(Orientation.VERTICAL);
-////        GridPane pane = new GridPane();
-//        pane.setAlignment(Pos.TOP_LEFT);
-//        pane.setHgap(10);
-//        pane.setVgap(10);
-//        pane.setPadding(new Insets(25, 25, 25, 25));
-//
-//        pane.getChildren().add(header());
-//        pane.getChildren().add(stats());
-//        pane.getChildren().add(speed());
-//        pane.getChildren().add(defense1());
-//        pane.getChildren().add(StatBlock.renderImage());
-//
-//        FlowPane main = new FlowPane(Orientation.VERTICAL);
-//        main.getChildren().add(createMenuBar(primaryStage));
-//        main.getChildren().add(pane);
-//        Scene scene = new Scene(main, 600, 550);
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-//    }
+    @Override
+    public void start(Stage primaryStage) {
+        Locale.setDefault(new Locale("cs"));
+        primaryStage.setTitle("MonsterMash!");
+        FlowPane pane = new FlowPane(Orientation.VERTICAL);
+//        GridPane pane = new GridPane();
+        pane.setAlignment(Pos.TOP_LEFT);
+        pane.setHgap(10);
+        pane.setVgap(10);
+        pane.setPadding(new Insets(25, 25, 25, 25));
+
+        pane.getChildren().add(header());
+        pane.getChildren().add(stats());
+        pane.getChildren().add(speed());
+        pane.getChildren().add(defense1());
+        pane.getChildren().add(StatBlock.renderImage());
+
+        FlowPane main = new FlowPane(Orientation.VERTICAL);
+        main.getChildren().add(createMenuBar(primaryStage));
+        main.getChildren().add(pane);
+        Scene scene = new Scene(main, 600, 550);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
 
     public Pane header() {
         GridPane pane = new GridPane();
@@ -348,10 +323,14 @@ public class MonsterMash extends Application {
 //    }
 
     public Pane createMenuBar(Stage primaryStage) {
-        final var fileMenu = new Menu("File");
+        final var fileMenu = new Menu();
+        this.binder.bind(fileMenu.textProperty(), "ui.menu.file");
         final var export = new MenuItem("Export to...");
+        this.binder.bind(export.textProperty(), "ui.menu.file.export");
         final var settings = new MenuItem("Settings");
-        final var exit = new MenuItem("Exit");
+        this.binder.bind(settings.textProperty(), "ui.menu.file.settings");
+        final var exit = new MenuItem();
+        this.binder.bind(exit.textProperty(), "ui.menu.file.exit");
 
         fileMenu.getItems().add(export);
         fileMenu.getItems().add(new SeparatorMenuItem());
@@ -365,29 +344,47 @@ public class MonsterMash extends Application {
                     final Stage dialog = new Stage();
                     dialog.initModality(Modality.APPLICATION_MODAL);
                     dialog.initOwner(primaryStage);
+
+                    binder.bind(dialog.titleProperty(), "ui.settings.title");
+
+                    HBox hbox = new HBox();
+                    hbox.setPadding(new Insets(5, 5, 5, 5));
+                    hbox.setSpacing(5);
+
+                    Button buttonEnglish = binder.buttonForKey("button.english");
+                    buttonEnglish.setOnAction((evt) -> switchLanguage(Language.ENGLISH));
+                    hbox.getChildren().add(buttonEnglish);
+
+                    Button buttonGerman = binder.buttonForKey("button.german");
+                    buttonGerman.setOnAction((evt) -> switchLanguage(Language.CZECH));
+                    hbox.getChildren().add(buttonGerman);
+
+
+                    // a label to display the number of changes, recalculating the text on every change
+                    final Label label = binder.labelForValue(() -> messages.get("label.numSwitches", numSwitches));
+
                     VBox dialogVbox = new VBox(20);
                     dialogVbox.getChildren().add(new Text("This is a Dialog"));
+                    dialogVbox.getChildren().add(hbox);
+                    dialogVbox.getChildren().add(label);
+
                     Scene dialogScene = new Scene(dialogVbox, 300, 200);
                     dialog.setScene(dialogScene);
                     dialog.show();
                 }
             });
 
-        final var langMenu = new Menu("Language");
-        final var czech = new RadioMenuItem("Czech");
-        final var english = new RadioMenuItem("English");
+        final var helpMenu = new Menu("Help");
+        this.binder.bind(helpMenu.textProperty(), "ui.menu.help");
+        final var about = new MenuItem("About");
+        this.binder.bind(about.textProperty(), "ui.menu.help.about");
 
-        final var toggleGroup = new ToggleGroup();
-        toggleGroup.getToggles().add(czech);
-        toggleGroup.getToggles().add(english);
-
-        langMenu.getItems().add(czech);
-        langMenu.getItems().add(english);
+        helpMenu.getItems().add(about);
 
         final var menuBar = new MenuBar();
         menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
         menuBar.getMenus().add(fileMenu);
-        menuBar.getMenus().add(langMenu);
+        menuBar.getMenus().add(helpMenu);
         return new VBox(menuBar);
     }
 
