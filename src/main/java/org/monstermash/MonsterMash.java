@@ -62,7 +62,6 @@ public class MonsterMash extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Locale.setDefault(new Locale("cs"));
         primaryStage.setTitle("MonsterMash!");
         FlowPane pane = new FlowPane(Orientation.VERTICAL);
 //        GridPane pane = new GridPane();
@@ -125,7 +124,8 @@ public class MonsterMash extends Application {
         pane.setHgap(10);
         pane.setVgap(10);
 
-        Label fortitudeLabel = new Label("Zdatnost:");
+        Label fortitudeLabel = new Label();
+        this.binder.bind(fortitudeLabel.textProperty(),"ui.monster.stats.fortitude");
         pane.add(fortitudeLabel, 0, 0);
         Spinner<Integer> fortitude = new Spinner<>(-1, 5, 0);
         fortitude.setPrefWidth(50);
@@ -135,18 +135,21 @@ public class MonsterMash extends Application {
         pane.add(fortitude, 0, 1);
 
         Label reflexesLabel = new Label("Reflexes");
+        this.binder.bind(reflexesLabel.textProperty(),"ui.monster.stats.reflexes");
         pane.add(reflexesLabel, 1, 0);
         Spinner<Integer> reflexes = new Spinner<>(-1, 5, 0);
         reflexes.setPrefWidth(50);
         pane.add(reflexes, 1, 1);
 
         Label intelligenceLabel = new Label("Intelligence");
+        this.binder.bind(intelligenceLabel.textProperty(),"ui.monster.stats.intelligence");
         pane.add(intelligenceLabel, 2, 0);
         Spinner<Integer> intelligence = new Spinner<>(-1, 5, 0);
         intelligence.setPrefWidth(50);
         pane.add(intelligence, 2, 1);
 
         Label insightLabel = new Label("Insight");
+        this.binder.bind(insightLabel.textProperty(),"ui.monster.stats.insight");
         pane.add(insightLabel, 3, 0);
         Spinner<Integer> insight = new Spinner<>(-1, 5, 0);
         insight.setPrefWidth(50);
