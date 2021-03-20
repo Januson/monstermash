@@ -393,6 +393,7 @@ public class MonsterMash extends Application {
 
         final var exit = new MenuItem();
         this.binder.bind(exit.textProperty(), "ui.menu.file.exit");
+        exit.setOnAction(event -> primaryStage.close());
 
         fileMenu.getItems().add(render);
         fileMenu.getItems().add(export);
