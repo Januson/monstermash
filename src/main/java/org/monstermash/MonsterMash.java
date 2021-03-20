@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -24,7 +23,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -34,21 +32,22 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.monstermash.statblock.StatBlock;
-import org.monstermash.ui.I18N;
-
-import java.util.Locale;
+import org.monstermash.ui.Language;
+import org.monstermash.ui.Languages;
+import org.monstermash.ui.Messages;
+import org.monstermash.ui.TextBinder;
 
 
 public class MonsterMash extends Application {
 
-    /** number of language switches. */
     private Integer numSwitches = 0;
+    private Languages languages = new Languages();
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-
-        primaryStage.titleProperty().bind(I18N.createStringBinding("window.title"));
+    public void start(Stage primaryStage) {
+        final var messages = new Messages(languages);
+        final var binder = new TextBinder(languages, messages);
+        primaryStage.titleProperty().bind(binder.createStringBinding("window.title"));
 
         // create content
         BorderPane content = new BorderPane();
@@ -58,18 +57,18 @@ public class MonsterMash extends Application {
         hbox.setPadding(new Insets(5, 5, 5, 5));
         hbox.setSpacing(5);
 
-        Button buttonEnglish = I18N.buttonForKey("button.english");
-        buttonEnglish.setOnAction((evt) -> switchLanguage(Locale.ENGLISH));
+        Button buttonEnglish = binder.buttonForKey("button.english");
+        buttonEnglish.setOnAction((evt) -> switchLanguage(Language.ENGLISH));
         hbox.getChildren().add(buttonEnglish);
 
-        Button buttonGerman = I18N.buttonForKey("button.german");
-        buttonGerman.setOnAction((evt) -> switchLanguage(new Locale("cs", "CZ")));
+        Button buttonGerman = binder.buttonForKey("button.german");
+        buttonGerman.setOnAction((evt) -> switchLanguage(Language.CZECH));
         hbox.getChildren().add(buttonGerman);
 
         content.setTop(hbox);
 
         // a label to display the number of changes, recalculating the text on every change
-        final Label label = I18N.labelForValue(() -> I18N.get("label.numSwitches", numSwitches));
+        final Label label = binder.labelForValue(() -> messages.get("label.numSwitches", numSwitches));
         content.setBottom(label);
 
         primaryStage.setScene(new Scene(content, 400, 200));
@@ -79,12 +78,11 @@ public class MonsterMash extends Application {
     /**
      * sets the given Locale in the I18N class and keeps count of the number of switches.
      *
-     * @param locale
-     *         the new local to set
+     * @param language the new local to set
      */
-    private void switchLanguage(Locale locale) {
+    private void switchLanguage(Language language) {
         numSwitches++;
-        I18N.setLocale(locale);
+        this.languages.switchTo(language);
     }
 
 //    @Override
@@ -305,7 +303,7 @@ public class MonsterMash extends Application {
         return typeChoice;
     }
 
-    enum State{
+    enum State {
         Immunity,
         Resistance,
         Vulnerability,
