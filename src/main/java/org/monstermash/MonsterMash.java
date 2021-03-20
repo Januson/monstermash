@@ -387,9 +387,11 @@ public class MonsterMash extends Application {
     public Pane createMenuBar(Stage primaryStage) {
         final var fileMenu = new Menu();
         this.binder.bind(fileMenu.textProperty(), "ui.menu.file");
-        final var export = new MenuItem("Export to...");
+        final var render = new MenuItem();
+        this.binder.bind(render.textProperty(), "ui.menu.file.render");
+        final var export = new MenuItem();
         this.binder.bind(export.textProperty(), "ui.menu.file.export");
-        final var settings = new MenuItem("Settings");
+        final var settings = new MenuItem();
         this.binder.bind(settings.textProperty(), "ui.menu.file.settings");
         final var exit = new MenuItem();
         this.binder.bind(exit.textProperty(), "ui.menu.file.exit");
