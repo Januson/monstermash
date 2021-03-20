@@ -1,10 +1,6 @@
 package org.monstermash;
 
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -12,9 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -43,8 +37,6 @@ import org.monstermash.ui.Language;
 import org.monstermash.ui.Languages;
 import org.monstermash.ui.Messages;
 import org.monstermash.ui.TextBinder;
-
-import java.util.Locale;
 
 
 public class MonsterMash extends Application {
@@ -387,61 +379,31 @@ public class MonsterMash extends Application {
     public Pane createMenuBar(Stage primaryStage) {
         final var fileMenu = new Menu();
         this.binder.bind(fileMenu.textProperty(), "ui.menu.file");
+
         final var render = new MenuItem();
         this.binder.bind(render.textProperty(), "ui.menu.file.render");
+        render.setOnAction(event -> showStatblock(primaryStage));
+
         final var export = new MenuItem();
         this.binder.bind(export.textProperty(), "ui.menu.file.export");
+
         final var settings = new MenuItem();
         this.binder.bind(settings.textProperty(), "ui.menu.file.settings");
+        settings.setOnAction(event -> showSettings(primaryStage));
+
         final var exit = new MenuItem();
         this.binder.bind(exit.textProperty(), "ui.menu.file.exit");
 
+        fileMenu.getItems().add(render);
         fileMenu.getItems().add(export);
         fileMenu.getItems().add(new SeparatorMenuItem());
         fileMenu.getItems().add(settings);
         fileMenu.getItems().add(new SeparatorMenuItem());
         fileMenu.getItems().add(exit);
-        settings.setOnAction(
-            new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    final Stage dialog = new Stage();
-                    dialog.initModality(Modality.APPLICATION_MODAL);
-                    dialog.initOwner(primaryStage);
 
-                    binder.bind(dialog.titleProperty(), "ui.settings.title");
-
-                    HBox hbox = new HBox();
-                    hbox.setPadding(new Insets(5, 5, 5, 5));
-                    hbox.setSpacing(5);
-
-                    Button buttonEnglish = binder.buttonForKey("button.english");
-                    buttonEnglish.setOnAction((evt) -> switchLanguage(Language.ENGLISH));
-                    hbox.getChildren().add(buttonEnglish);
-
-                    Button buttonGerman = binder.buttonForKey("button.german");
-                    buttonGerman.setOnAction((evt) -> switchLanguage(Language.CZECH));
-                    hbox.getChildren().add(buttonGerman);
-
-
-                    // a label to display the number of changes, recalculating the text on every change
-                    final Label label = binder.labelForValue(() -> messages.get("label.numSwitches", numSwitches));
-
-                    VBox dialogVbox = new VBox(20);
-                    dialogVbox.getChildren().add(new Text("This is a Dialog"));
-                    dialogVbox.getChildren().add(hbox);
-                    dialogVbox.getChildren().add(label);
-
-                    Scene dialogScene = new Scene(dialogVbox, 300, 200);
-                    dialog.setScene(dialogScene);
-                    dialog.getIcons().add(new Image(MonsterMash.class.getResourceAsStream("/images/icon.png")));
-                    dialog.show();
-                }
-            });
-
-        final var helpMenu = new Menu("Help");
+        final var helpMenu = new Menu();
         this.binder.bind(helpMenu.textProperty(), "ui.menu.help");
-        final var about = new MenuItem("About");
+        final var about = new MenuItem();
         this.binder.bind(about.textProperty(), "ui.menu.help.about");
 
         helpMenu.getItems().add(about);
@@ -451,6 +413,54 @@ public class MonsterMash extends Application {
         menuBar.getMenus().add(fileMenu);
         menuBar.getMenus().add(helpMenu);
         return new VBox(menuBar);
+    }
+
+    private void showSettings(Stage primaryStage) {
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(primaryStage);
+
+        binder.bind(dialog.titleProperty(), "ui.settings.title");
+
+        HBox hbox = new HBox();
+        hbox.setPadding(new Insets(5, 5, 5, 5));
+        hbox.setSpacing(5);
+
+        Button buttonEnglish = binder.buttonForKey("button.english");
+        buttonEnglish.setOnAction((evt) -> switchLanguage(Language.ENGLISH));
+        hbox.getChildren().add(buttonEnglish);
+
+        Button buttonGerman = binder.buttonForKey("button.german");
+        buttonGerman.setOnAction((evt) -> switchLanguage(Language.CZECH));
+        hbox.getChildren().add(buttonGerman);
+
+
+        // a label to display the number of changes, recalculating the text on every change
+        final Label label = binder.labelForValue(() -> messages.get("label.numSwitches", numSwitches));
+
+        VBox dialogVbox = new VBox(20);
+        dialogVbox.getChildren().add(new Text("This is a Dialog"));
+        dialogVbox.getChildren().add(hbox);
+        dialogVbox.getChildren().add(label);
+
+        Scene dialogScene = new Scene(dialogVbox, 300, 200);
+        dialog.setScene(dialogScene);
+        dialog.getIcons().add(new Image(MonsterMash.class.getResourceAsStream("/images/icon.png")));
+        dialog.show();
+    }
+
+    private void showStatblock(Stage primaryStage) {
+        VBox dialogVbox = new VBox(20);
+        dialogVbox.getChildren().add(new Text("This is a Statblock"));
+
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(primaryStage);
+        binder.bind(dialog.titleProperty(), "ui.statblock.title");
+        Scene dialogScene = new Scene(dialogVbox, 300, 200);
+        dialog.setScene(dialogScene);
+        dialog.getIcons().add(new Image(MonsterMash.class.getResourceAsStream("/images/icon.png")));
+        dialog.show();
     }
 
     public static void main(String[] args) {
