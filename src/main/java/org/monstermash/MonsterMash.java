@@ -164,38 +164,44 @@ public class MonsterMash extends Application {
         pane.setHgap(10);
         pane.setVgap(10);
 
-        Label speedLabel = new Label("Speed:");
+        Label speedLabel = new Label();
+        this.binder.bind(speedLabel.textProperty(),"ui.monster.speed.walk");
         pane.add(speedLabel, 0, 0);
         Spinner<Integer> speed = new Spinner<>(0, 1000, 0, 5);
         speed.setPrefWidth(50);
         pane.add(speed, 0, 1);
 
-        Label swimLabel = new Label("Swim");
+        Label swimLabel = new Label();
+        this.binder.bind(swimLabel.textProperty(),"ui.monster.speed.swim");
         pane.add(swimLabel, 1, 0);
         Spinner<Integer> swim = new Spinner<>(0, 1000, 0, 5);
         swim.setPrefWidth(50);
         pane.add(swim, 1, 1);
 
-        Label burrowLabel = new Label("Burrow");
+        Label burrowLabel = new Label();
+        this.binder.bind(burrowLabel.textProperty(),"ui.monster.speed.burrow");
         pane.add(burrowLabel, 2, 0);
         Spinner<Integer> burrow = new Spinner<>(0, 1000, 0, 5);
         burrow.setPrefWidth(50);
         pane.add(burrow, 2, 1);
 
 
-        Label climbLabel = new Label("Climb");
+        Label climbLabel = new Label();
+        this.binder.bind(climbLabel.textProperty(),"ui.monster.speed.climb");
         pane.add(climbLabel, 3, 0);
         Spinner<Integer> climb = new Spinner<>(0, 1000, 0, 5);
         climb.setPrefWidth(50);
         pane.add(climb, 3, 1);
 
-        Label flightLabel = new Label("Flight");
+        Label flightLabel = new Label();
+        this.binder.bind(flightLabel.textProperty(),"ui.monster.speed.fly");
         pane.add(flightLabel, 4, 0);
         Spinner<Integer> flight = new Spinner<>(0, 1000, 0, 5);
         flight.setPrefWidth(50);
         pane.add(flight, 4, 1);
 
-        Label hoverLabel = new Label("Hover");
+        Label hoverLabel = new Label();
+        this.binder.bind(hoverLabel.textProperty(),"ui.monster.speed.hover");
         pane.add(hoverLabel, 5, 0);
         CheckBox hover = new CheckBox();
 //        Spinner<Integer> hover = new Spinner<>(-1, 5, 0);
