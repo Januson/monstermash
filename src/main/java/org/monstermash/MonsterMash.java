@@ -26,6 +26,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -83,6 +84,7 @@ public class MonsterMash extends Application {
         main.getChildren().add(createMenuBar(primaryStage));
         main.getChildren().add(pane);
         Scene scene = new Scene(main, 600, 550);
+        primaryStage.getIcons().add(new Image(MonsterMash.class.getResourceAsStream("/images/icon.png")));
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -430,6 +432,7 @@ public class MonsterMash extends Application {
 
                     Scene dialogScene = new Scene(dialogVbox, 300, 200);
                     dialog.setScene(dialogScene);
+                    dialog.getIcons().add(new Image(MonsterMash.class.getResourceAsStream("/images/icon.png")));
                     dialog.show();
                 }
             });
