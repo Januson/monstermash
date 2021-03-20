@@ -1,6 +1,8 @@
 package org.monstermash;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -10,20 +12,20 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -34,6 +36,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import org.monstermash.statblock.StatBlock;
 import org.monstermash.ui.Language;
 import org.monstermash.ui.Languages;
@@ -95,7 +98,8 @@ public class MonsterMash extends Application {
         sceneTitle.setFont(Font.font("Arial", FontWeight.NORMAL, 20));
         pane.add(sceneTitle, 0, 0, 2, 1);
 
-        Label nameLabel = new Label("Name:");
+        Label nameLabel = new Label();
+        this.binder.bind(nameLabel.textProperty(),"ui.monster.name");
         pane.add(nameLabel, 0, 1);
         final TextField name = new TextField();
         name.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -104,14 +108,37 @@ public class MonsterMash extends Application {
 
         pane.add(name, 1, 1);
 
-        Label type = new Label("Type:");
-        pane.add(type, 0, 2);
+        Label typeLabel = new Label();
+        this.binder.bind(typeLabel.textProperty(),"ui.monster.type");
+        pane.add(typeLabel, 0, 2);
         ChoiceBox<Type> typeChoice = new ChoiceBox<>();
         typeChoice.getItems().setAll(Type.values());
         typeChoice.setValue(Type.BEAST);
+        StringConverter<Type> converter = new StringConverter<>(){
+            @Override
+            public String toString(Type object) {
+                return messages.get(object.key());
+            }
+            @Override
+            public Type fromString(String string) {
+                return null;
+            }
+        };
+        typeChoice.setConverter(converter);
         ChoiceBox<Size> sizeChoice = new ChoiceBox<>();
         sizeChoice.getItems().setAll(Size.values());
         sizeChoice.setValue(Size.MEDIUM);
+        StringConverter<Size> sizeConverter = new StringConverter<>(){
+            @Override
+            public String toString(Size object) {
+                return messages.get(object.key());
+            }
+            @Override
+            public Size fromString(String string) {
+                return null;
+            }
+        };
+        sizeChoice.setConverter(sizeConverter);
         HBox typeSize = new HBox(sizeChoice, typeChoice);
         pane.add(typeSize, 1, 2);
 
@@ -211,19 +238,43 @@ public class MonsterMash extends Application {
         return pane;
     }
 
-    public enum Size {
-        TINY,
-        SMALL,
-        MEDIUM,
-        LARGE,
-        HUGE,
-        GARGANTUAN;
+    interface Translatable {
+        String key();
     }
 
-    public enum Type {
-        BEAST,
-        HUMANOID,
-        UNDEAD;
+    public enum Size implements Translatable {
+        TINY("ui.monster.size.tiny"),
+        SMALL("ui.monster.size.small"),
+        MEDIUM("ui.monster.size.medium"),
+        LARGE("ui.monster.size.large"),
+        HUGE("ui.monster.size.huge"),
+        GARGANTUAN("ui.monster.size.gargantuan");
+
+        private final String key;
+        Size(final String key) {
+            this.key = key;
+        }
+
+        @Override
+        public String key() {
+            return this.key;
+        }
+    }
+
+    public enum Type implements Translatable {
+        BEAST("ui.monster.type.beast"),
+        HUMANOID("ui.monster.type.humanoid"),
+        UNDEAD("ui.monster.type.undead");
+
+        private final String key;
+        Type(final String key) {
+            this.key = key;
+        }
+
+        @Override
+        public String key() {
+            return this.key;
+        }
     }
 
     private TabPane tabs() {
