@@ -1,6 +1,7 @@
 package org.monstermash;
 
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -32,7 +33,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import org.monstermash.statblock.StatBlock;
+import org.monstermash.statblock.Monster;
+import org.monstermash.statblock.Statblock;
 import org.monstermash.ui.Language;
 import org.monstermash.ui.Languages;
 import org.monstermash.ui.Messages;
@@ -42,9 +44,12 @@ import org.monstermash.ui.TextBinder;
 public class MonsterMash extends Application {
 
     private Integer numSwitches = 0;
-    private Languages languages = new Languages();
-    private Messages messages = new Messages(languages);
-    private TextBinder binder = new TextBinder(languages, messages);
+    private final Languages languages = new Languages();
+    private final Messages messages = new Messages(languages);
+    private final TextBinder binder = new TextBinder(languages, messages);
+    private final Monster monster = new Monster();
+    private final Statblock statblock = new Statblock(monster);
+
 
     /**
      * sets the given Locale in the I18N class and keeps count of the number of switches.
@@ -70,15 +75,18 @@ public class MonsterMash extends Application {
         pane.getChildren().add(stats());
         pane.getChildren().add(speed());
         pane.getChildren().add(defense1());
-        pane.getChildren().add(StatBlock.renderImage());
 
         FlowPane main = new FlowPane(Orientation.VERTICAL);
         main.getChildren().add(createMenuBar(primaryStage));
         main.getChildren().add(pane);
         Scene scene = new Scene(main, 600, 550);
-        primaryStage.getIcons().add(new Image(MonsterMash.class.getResourceAsStream("/images/icon.png")));
+        primaryStage.getIcons().add(icon());
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private Image icon() {
+        return new Image(MonsterMash.class.getResourceAsStream("/images/icon.png"));
     }
 
     public Pane header() {
@@ -95,7 +103,10 @@ public class MonsterMash extends Application {
         Label nameLabel = new Label();
         this.binder.bind(nameLabel.textProperty(),"ui.monster.name");
         pane.add(nameLabel, 0, 1);
-        final TextField name = new TextField();
+        final TextField name = new TextField("Monster");
+        name.textProperty().set("Monster");
+        this.monster.nameProperty().bind(name.textProperty());
+        name.deselect();
         name.textProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println("textfield changed from " + oldValue + " to " + newValue);
         });
@@ -133,6 +144,7 @@ public class MonsterMash extends Application {
             }
         };
         sizeChoice.setConverter(sizeConverter);
+//        this.monster.sizeProperty().bind( Bindings.selectString(sizeChoice.getSelectionModel().selectedItemProperty()) );
         HBox typeSize = new HBox(sizeChoice, typeChoice);
         pane.add(typeSize, 1, 2);
 
@@ -446,21 +458,18 @@ public class MonsterMash extends Application {
 
         Scene dialogScene = new Scene(dialogVbox, 300, 200);
         dialog.setScene(dialogScene);
-        dialog.getIcons().add(new Image(MonsterMash.class.getResourceAsStream("/images/icon.png")));
+        dialog.getIcons().add(icon());
         dialog.show();
     }
 
     private void showStatblock(Stage primaryStage) {
-        VBox dialogVbox = new VBox(20);
-        dialogVbox.getChildren().add(new Text("This is a Statblock"));
-
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(primaryStage);
         binder.bind(dialog.titleProperty(), "ui.statblock.title");
-        Scene dialogScene = new Scene(dialogVbox, 300, 200);
+        Scene dialogScene = new Scene(this.statblock.renderImage(), 300, 200);
         dialog.setScene(dialogScene);
-        dialog.getIcons().add(new Image(MonsterMash.class.getResourceAsStream("/images/icon.png")));
+        dialog.getIcons().add(icon());
         dialog.show();
     }
 

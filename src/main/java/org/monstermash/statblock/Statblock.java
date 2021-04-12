@@ -15,11 +15,17 @@ import javafx.scene.text.FontWeight;
 //import java.awt.Color;
 //import java.awt.Dimension;
 
-public class StatBlock {
+public class Statblock {
 //    private static final Logger LOG = LogManager.getLogger(StatBlock.class);
 //    private static final Color TRANSPARENT_COLOR = new Color(238, 238, 238);
 
-    public static Pane renderImage() {
+    private final Monster monster;
+
+    public Statblock(final Monster monster) {
+        this.monster = monster;
+    }
+
+    public Pane renderImage() {
 //        if (currentRenderWindow != null) {
 //            currentRenderWindow.dispose();
 //            currentRenderWindow = null;
@@ -47,32 +53,30 @@ public class StatBlock {
         return new VBox(getWindowContents());
     }
 
-    private static Pane getWindowContents() {
+    private Pane getWindowContents() {
         GridPane content = new GridPane();
         content.add(header(), 0, 0);
         content.add(getNewSeparator(), 0, 1);
         return content;
     }
 
-    private static Pane header() {
+    private Pane header() {
 //        returnMe.setLayout(new BoxLayout(returnMe, BoxLayout.Y_AXIS));
 //        returnMe.setOpaque(false);
 
         //Actual content
-        String nameData = "Ghoul of the rotting tree";
-        Label nameLabel = new Label(nameData);
+        Label nameLabel = new Label(this.monster.name());
 //        nameLabel.setFont(titleFont(20));
-        Label sizeTypeTag = new Label(String.format("%s %s(%s)",
-            "Obrovský",
-            "Mrtvák",
-            "Revenant"
+        Label sizeTypeTag = new Label(String.format("%s %s",
+            this.monster.size(),
+            this.monster.type()
         ));
         sizeTypeTag.setFont(Font.font("Arial", FontWeight.NORMAL, 10));
 //        sizeTypeTag.setFont(typeFont(10));
         return new VBox(nameLabel, sizeTypeTag);
     }
 
-//    private static JPanel getNewBuffer() {
+//    private  JPanel getNewBuffer() {
 //        JPanel buffer = new JPanel();
 //        buffer.setOpaque(false);
 //        buffer.setPreferredSize(new Dimension(100, 50));
@@ -80,25 +84,24 @@ public class StatBlock {
 //        return buffer;
 //    }
 
-//    public static Font titleFont(double fontSize) {
+//    public  Font titleFont(double fontSize) {
 //        return new Resource("alegreya/AlegreyaSC-Regular.otf")
 //            .withSize(fontSize);
 //    }
 //
-//    public static Font typeFont(double fontSize) {
+//    public  Font typeFont(double fontSize) {
 //        return new Resource("opensans/OpenSans-Italic.ttf")
 //            .withSize(fontSize);
 //    }
 //
-//    public static Font regularFont(double fontSize) {
+//    public  Font regularFont(double fontSize) {
 //        return new Resource("opensans/OpenSans-Regular.ttf")
 //            .withSize(fontSize);
 //    }
 
-    private static Pane getNewSeparator() {
+    private Pane getNewSeparator() {
         return new Separator();
     }
-
 
 
 }
