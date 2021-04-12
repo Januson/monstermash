@@ -2,10 +2,7 @@ import org.gradle.nativeplatform.platform.internal.DefaultOperatingSystem
 
 plugins {
     application
-//    id("org.openjfx.javafxplugin") version "0.0.9"
-    id("org.beryx.jlink") version "2.23.3"
-//    id("org.mikeneck.graalvm-native-image") version "v1.2.0"
-//    id("com.palantir.graal") version "0.7.2"
+    id("org.beryx.jlink") version "2.23.6"
 }
 
 group = "org.example"
@@ -24,7 +21,7 @@ val platform: String = when {
     else -> throw BuildCancelledException("Unsupported platform! $currentOS")
 }
 
-val javafxVersion = "15.0.1"
+val javafxVersion = "16"
 val log4jVersion = "2.14.0"
 val junitVersion = "5.7.0"
 dependencies {
@@ -39,8 +36,8 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_15
-    targetCompatibility = JavaVersion.VERSION_15
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
     modularity.inferModulePath.set(true)
 }
 
@@ -51,15 +48,6 @@ tasks.withType<Test> {
 application {
     mainModule.set("monstermash")
     mainClass.set("org.monstermash.MonsterMash")
-}
-
-val run by tasks.existing(JavaExec::class) {
-    doFirst {
-        copy {
-            from("src/main/resources")
-            into("$buildDir/classes/java/main")
-        }
-    }
 }
 
 val launcherName = "monstermash"
@@ -74,7 +62,6 @@ jlink {
         name = launcherName
         jvmArgs.addAll(
             listOf(
-                "--enable-preview",
                 "-Dfile.encoding=UTF-8"
             )
         )
