@@ -9,6 +9,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.monstermash.ui.Messages;
+
+import java.util.Locale;
 
 //import javax.swing.JLabel;
 //import javax.swing.JPanel;
@@ -20,9 +23,11 @@ public class Statblock {
 //    private static final Color TRANSPARENT_COLOR = new Color(238, 238, 238);
 
     private final Monster monster;
+    private final Messages messages;
 
-    public Statblock(final Monster monster) {
+    public Statblock(final Monster monster, Messages messages) {
         this.monster = monster;
+        this.messages = messages;
     }
 
     public Pane renderImage() {
@@ -68,8 +73,8 @@ public class Statblock {
         Label nameLabel = new Label(this.monster.name());
 //        nameLabel.setFont(titleFont(20));
         Label sizeTypeTag = new Label(String.format("%s %s",
-            this.monster.size(),
-            this.monster.type()
+            this.messages.get(this.monster.size().key()),
+            this.messages.get(this.monster.type().key()).toLowerCase(Locale.ROOT)
         ));
         sizeTypeTag.setFont(Font.font("Arial", FontWeight.NORMAL, 10));
 //        sizeTypeTag.setFont(typeFont(10));

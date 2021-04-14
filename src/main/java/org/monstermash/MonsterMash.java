@@ -34,7 +34,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.monstermash.statblock.Monster;
+import org.monstermash.statblock.Size;
 import org.monstermash.statblock.Statblock;
+import org.monstermash.statblock.Translatable;
+import org.monstermash.statblock.Type;
 import org.monstermash.ui.Language;
 import org.monstermash.ui.Languages;
 import org.monstermash.ui.Messages;
@@ -48,7 +51,7 @@ public class MonsterMash extends Application {
     private final Messages messages = new Messages(languages);
     private final TextBinder binder = new TextBinder(languages, messages);
     private final Monster monster = new Monster();
-    private final Statblock statblock = new Statblock(monster);
+    private final Statblock statblock = new Statblock(monster, messages);
 
 
     /**
@@ -101,7 +104,7 @@ public class MonsterMash extends Application {
         pane.add(sceneTitle, 0, 0, 2, 1);
 
         Label nameLabel = new Label();
-        this.binder.bind(nameLabel.textProperty(),"ui.monster.name");
+        this.binder.bind(nameLabel.textProperty(), "ui.monster.name");
         pane.add(nameLabel, 0, 1);
         final TextField name = new TextField("Monster");
         name.textProperty().set("Monster");
@@ -114,37 +117,40 @@ public class MonsterMash extends Application {
         pane.add(name, 1, 1);
 
         Label typeLabel = new Label();
-        this.binder.bind(typeLabel.textProperty(),"ui.monster.type");
+        this.binder.bind(typeLabel.textProperty(), "ui.monster.type");
         pane.add(typeLabel, 0, 2);
         ChoiceBox<Type> typeChoice = new ChoiceBox<>();
         typeChoice.getItems().setAll(Type.values());
         typeChoice.setValue(Type.BEAST);
-        StringConverter<Type> converter = new StringConverter<>(){
+        StringConverter<Type> converter = new StringConverter<>() {
             @Override
             public String toString(Type object) {
                 return messages.get(object.key());
             }
+
             @Override
             public Type fromString(String string) {
                 return null;
             }
         };
         typeChoice.setConverter(converter);
+        this.monster.typeProperty().bind(Bindings.select(typeChoice.getSelectionModel().selectedItemProperty()));
         ChoiceBox<Size> sizeChoice = new ChoiceBox<>();
         sizeChoice.getItems().setAll(Size.values());
         sizeChoice.setValue(Size.MEDIUM);
-        StringConverter<Size> sizeConverter = new StringConverter<>(){
+        StringConverter<Size> sizeConverter = new StringConverter<>() {
             @Override
             public String toString(Size object) {
                 return messages.get(object.key());
             }
+
             @Override
             public Size fromString(String string) {
                 return null;
             }
         };
         sizeChoice.setConverter(sizeConverter);
-//        this.monster.sizeProperty().bind( Bindings.selectString(sizeChoice.getSelectionModel().selectedItemProperty()) );
+        this.monster.sizeProperty().bind(Bindings.select(sizeChoice.getSelectionModel().selectedItemProperty()));
         HBox typeSize = new HBox(sizeChoice, typeChoice);
         pane.add(typeSize, 1, 2);
 
@@ -158,7 +164,7 @@ public class MonsterMash extends Application {
         pane.setVgap(10);
 
         Label fortitudeLabel = new Label();
-        this.binder.bind(fortitudeLabel.textProperty(),"ui.monster.stats.fortitude");
+        this.binder.bind(fortitudeLabel.textProperty(), "ui.monster.stats.fortitude");
         pane.add(fortitudeLabel, 0, 0);
         Spinner<Integer> fortitude = new Spinner<>(-1, 5, 0);
         fortitude.setPrefWidth(50);
@@ -168,21 +174,21 @@ public class MonsterMash extends Application {
         pane.add(fortitude, 0, 1);
 
         Label reflexesLabel = new Label("Reflexes");
-        this.binder.bind(reflexesLabel.textProperty(),"ui.monster.stats.reflexes");
+        this.binder.bind(reflexesLabel.textProperty(), "ui.monster.stats.reflexes");
         pane.add(reflexesLabel, 1, 0);
         Spinner<Integer> reflexes = new Spinner<>(-1, 5, 0);
         reflexes.setPrefWidth(50);
         pane.add(reflexes, 1, 1);
 
         Label intelligenceLabel = new Label("Intelligence");
-        this.binder.bind(intelligenceLabel.textProperty(),"ui.monster.stats.intelligence");
+        this.binder.bind(intelligenceLabel.textProperty(), "ui.monster.stats.intelligence");
         pane.add(intelligenceLabel, 2, 0);
         Spinner<Integer> intelligence = new Spinner<>(-1, 5, 0);
         intelligence.setPrefWidth(50);
         pane.add(intelligence, 2, 1);
 
         Label insightLabel = new Label("Insight");
-        this.binder.bind(insightLabel.textProperty(),"ui.monster.stats.insight");
+        this.binder.bind(insightLabel.textProperty(), "ui.monster.stats.insight");
         pane.add(insightLabel, 3, 0);
         Spinner<Integer> insight = new Spinner<>(-1, 5, 0);
         insight.setPrefWidth(50);
@@ -198,21 +204,21 @@ public class MonsterMash extends Application {
         pane.setVgap(10);
 
         Label speedLabel = new Label();
-        this.binder.bind(speedLabel.textProperty(),"ui.monster.speed.walk");
+        this.binder.bind(speedLabel.textProperty(), "ui.monster.speed.walk");
         pane.add(speedLabel, 0, 0);
         Spinner<Integer> speed = new Spinner<>(0, 1000, 0, 5);
         speed.setPrefWidth(50);
         pane.add(speed, 0, 1);
 
         Label swimLabel = new Label();
-        this.binder.bind(swimLabel.textProperty(),"ui.monster.speed.swim");
+        this.binder.bind(swimLabel.textProperty(), "ui.monster.speed.swim");
         pane.add(swimLabel, 1, 0);
         Spinner<Integer> swim = new Spinner<>(0, 1000, 0, 5);
         swim.setPrefWidth(50);
         pane.add(swim, 1, 1);
 
         Label burrowLabel = new Label();
-        this.binder.bind(burrowLabel.textProperty(),"ui.monster.speed.burrow");
+        this.binder.bind(burrowLabel.textProperty(), "ui.monster.speed.burrow");
         pane.add(burrowLabel, 2, 0);
         Spinner<Integer> burrow = new Spinner<>(0, 1000, 0, 5);
         burrow.setPrefWidth(50);
@@ -220,21 +226,21 @@ public class MonsterMash extends Application {
 
 
         Label climbLabel = new Label();
-        this.binder.bind(climbLabel.textProperty(),"ui.monster.speed.climb");
+        this.binder.bind(climbLabel.textProperty(), "ui.monster.speed.climb");
         pane.add(climbLabel, 3, 0);
         Spinner<Integer> climb = new Spinner<>(0, 1000, 0, 5);
         climb.setPrefWidth(50);
         pane.add(climb, 3, 1);
 
         Label flightLabel = new Label();
-        this.binder.bind(flightLabel.textProperty(),"ui.monster.speed.fly");
+        this.binder.bind(flightLabel.textProperty(), "ui.monster.speed.fly");
         pane.add(flightLabel, 4, 0);
         Spinner<Integer> flight = new Spinner<>(0, 1000, 0, 5);
         flight.setPrefWidth(50);
         pane.add(flight, 4, 1);
 
         Label hoverLabel = new Label();
-        this.binder.bind(hoverLabel.textProperty(),"ui.monster.speed.hover");
+        this.binder.bind(hoverLabel.textProperty(), "ui.monster.speed.hover");
         pane.add(hoverLabel, 5, 0);
         CheckBox hover = new CheckBox();
 //        Spinner<Integer> hover = new Spinner<>(-1, 5, 0);
@@ -242,45 +248,6 @@ public class MonsterMash extends Application {
         pane.add(hover, 5, 1);
 
         return pane;
-    }
-
-    interface Translatable {
-        String key();
-    }
-
-    public enum Size implements Translatable {
-        TINY("ui.monster.size.tiny"),
-        SMALL("ui.monster.size.small"),
-        MEDIUM("ui.monster.size.medium"),
-        LARGE("ui.monster.size.large"),
-        HUGE("ui.monster.size.huge"),
-        GARGANTUAN("ui.monster.size.gargantuan");
-
-        private final String key;
-        Size(final String key) {
-            this.key = key;
-        }
-
-        @Override
-        public String key() {
-            return this.key;
-        }
-    }
-
-    public enum Type implements Translatable {
-        BEAST("ui.monster.type.beast"),
-        HUMANOID("ui.monster.type.humanoid"),
-        UNDEAD("ui.monster.type.undead");
-
-        private final String key;
-        Type(final String key) {
-            this.key = key;
-        }
-
-        @Override
-        public String key() {
-            return this.key;
-        }
     }
 
     private TabPane tabs() {

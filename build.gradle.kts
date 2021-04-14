@@ -5,7 +5,7 @@ plugins {
     id("org.beryx.jlink") version "2.23.6"
 }
 
-group = "org.example"
+group = "org.monstermash"
 version = "0.0.3"
 
 repositories {

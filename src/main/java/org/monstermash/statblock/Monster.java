@@ -10,13 +10,13 @@ public class Monster {
 
     private final StringProperty name;
     private final ObjectProperty<Size> size;
-    private final StringProperty type;
+    private final ObjectProperty<Type> type;
     private final StringProperty subtype;
 
     public Monster() {
         this.name = new SimpleStringProperty();
         this.size = new SimpleObjectProperty<>();
-        this.type = new SimpleStringProperty();
+        this.type = new SimpleObjectProperty<>();
         this.subtype = new SimpleStringProperty();
     }
 
@@ -36,11 +36,11 @@ public class Monster {
         return size;
     }
 
-    public String type() {
+    public Type type() {
         return type.get();
     }
 
-    public StringProperty typeProperty() {
+    public ObjectProperty<Type> typeProperty() {
         return type;
     }
 
