@@ -435,7 +435,7 @@ public class MonsterMash extends Application {
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(primaryStage);
         binder.bind(dialog.titleProperty(), "ui.statblock.title");
-        Scene dialogScene = new Scene(this.statblock.renderImage(), 300, 200);
+        Scene dialogScene = new Scene(this.statblock.renderImage(), 450, 200);
         dialog.setScene(dialogScene);
         dialog.getIcons().add(icon());
         dialog.show();
