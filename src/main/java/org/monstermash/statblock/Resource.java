@@ -22,7 +22,7 @@ final class Resource {
 
     Font withSize(double fontSize) {
         final var fontData = getSeparator();
-        return getFont(fontData);
+        return getFont(fontData, fontSize);
     }
 
 
@@ -31,8 +31,8 @@ final class Resource {
         return Resource.class.getResourceAsStream("/fonts/" + this.path);
     }
 
-    private Font getFont(InputStream istream) {
-        return Font.loadFont(istream, 20);
+    private Font getFont(InputStream istream, double fontSize) {
+        return Font.loadFont(istream, fontSize);
     }
 
 }

@@ -125,8 +125,7 @@ public class Statblock {
             this.messages.get(this.monster.size().key()),
             this.messages.get(this.monster.type().key()).toLowerCase(Locale.ROOT)
         ));
-        sizeTypeTag.setFont(Font.font("Arial", FontWeight.NORMAL, 10));
-//        sizeTypeTag.setFont(typeFont(10));
+        sizeTypeTag.setFont(new Resource("opensans/OpenSans-Italic.ttf").withSize(10));
         return new VBox(nameLabel, sizeTypeTag);
     }
 
