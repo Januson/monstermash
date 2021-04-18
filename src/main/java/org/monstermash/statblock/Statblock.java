@@ -101,12 +101,25 @@ public class Statblock {
         return content;
     }
 
+//    public static java.awt.Font titleFont(double fontSize) {
+//        return new Resource("alegreya/AlegreyaSC-Regular.otf")
+//            .withSize(fontSize);
+//    }
+//
+//    public static java.awt.Font typeFont(double fontSize) {
+//        return new Resource("opensans/OpenSans-Italic.ttf")
+//            .withSize(fontSize);
+//    }
+
     private Pane header() {
 //        returnMe.setLayout(new BoxLayout(returnMe, BoxLayout.Y_AXIS));
 //        returnMe.setOpaque(false);
 
         //Actual content
         Label nameLabel = new Label(this.monster.name());
+        nameLabel.setFont(new Resource("alegreya/AlegreyaSC-Regular.otf").withSize(20));
+        nameLabel.setTextFill(Color.web("#902717"));
+
 //        nameLabel.setFont(titleFont(20));
         Label sizeTypeTag = new Label(String.format("%s %s",
             this.messages.get(this.monster.size().key()),
