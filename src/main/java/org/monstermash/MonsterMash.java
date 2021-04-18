@@ -50,7 +50,7 @@ public class MonsterMash extends Application {
     private final Languages languages = new Languages();
     private final Messages messages = new Messages(languages);
     private final TextBinder binder = new TextBinder(languages, messages);
-    private final Monster monster = new Monster();
+    private final Monster monster = new Monster(this.binder);
     private final Statblock statblock = new Statblock(monster, messages);
 
 
@@ -168,9 +168,7 @@ public class MonsterMash extends Application {
         pane.add(fortitudeLabel, 0, 0);
         Spinner<Integer> fortitude = new Spinner<>(-1, 5, 0);
         fortitude.setPrefWidth(50);
-        fortitude.valueProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("Fortitude changed from " + oldValue + " to " + newValue);
-        });
+        fortitude.getValueFactory().valueProperty().bindBidirectional(monster.stats().fortitude().value());
         pane.add(fortitude, 0, 1);
 
         Label reflexesLabel = new Label("Reflexes");
@@ -178,6 +176,7 @@ public class MonsterMash extends Application {
         pane.add(reflexesLabel, 1, 0);
         Spinner<Integer> reflexes = new Spinner<>(-1, 5, 0);
         reflexes.setPrefWidth(50);
+        reflexes.getValueFactory().valueProperty().bindBidirectional(monster.stats().reflexes().value());
         pane.add(reflexes, 1, 1);
 
         Label intelligenceLabel = new Label("Intelligence");
@@ -185,6 +184,7 @@ public class MonsterMash extends Application {
         pane.add(intelligenceLabel, 2, 0);
         Spinner<Integer> intelligence = new Spinner<>(-1, 5, 0);
         intelligence.setPrefWidth(50);
+        intelligence.getValueFactory().valueProperty().bindBidirectional(monster.stats().intelligence().value());
         pane.add(intelligence, 2, 1);
 
         Label insightLabel = new Label("Insight");
@@ -192,6 +192,7 @@ public class MonsterMash extends Application {
         pane.add(insightLabel, 3, 0);
         Spinner<Integer> insight = new Spinner<>(-1, 5, 0);
         insight.setPrefWidth(50);
+        insight.getValueFactory().valueProperty().bindBidirectional(monster.stats().insight().value());
         pane.add(insight, 3, 1);
 
         return pane;

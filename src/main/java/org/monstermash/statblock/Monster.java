@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.monstermash.MonsterMash;
+import org.monstermash.ui.TextBinder;
 
 public class Monster {
 
@@ -12,12 +13,14 @@ public class Monster {
     private final ObjectProperty<Size> size;
     private final ObjectProperty<Type> type;
     private final StringProperty subtype;
+    private final Stats stats;
 
-    public Monster() {
+    public Monster(TextBinder binder) {
         this.name = new SimpleStringProperty();
         this.size = new SimpleObjectProperty<>();
         this.type = new SimpleObjectProperty<>();
         this.subtype = new SimpleStringProperty();
+        this.stats = new Stats(binder);
     }
 
     public String name() {
@@ -50,5 +53,9 @@ public class Monster {
 
     public StringProperty subtypeProperty() {
         return subtype;
+    }
+
+    public Stats stats() {
+        return this.stats;
     }
 }
