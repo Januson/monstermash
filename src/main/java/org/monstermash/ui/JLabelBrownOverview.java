@@ -1,7 +1,10 @@
-//package org.monstermash.ui;
-//
-//public class JLabelBrownOverview extends JLabelBrown{
-//	public JLabelBrownOverview(String title, String text) {
-//		super(String.format("<html><b>%s</b> %s</html>", title, text));
-//	}
-//}
+package org.monstermash.ui;
+
+import javafx.scene.control.Label;
+
+public class JLabelBrownOverview extends Label {
+	public JLabelBrownOverview(String text) {
+		super(text);
+        this.setStyle("-fx-font-weight: bold");
+	}
+}

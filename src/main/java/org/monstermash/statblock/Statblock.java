@@ -18,13 +18,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import org.monstermash.stats.Attribute;
 import org.monstermash.stats.DamageModifier;
 import org.monstermash.stats.Language;
 import org.monstermash.stats.Sense;
 import org.monstermash.stats.Skill;
+import org.monstermash.ui.JLabelBrown;
 import org.monstermash.ui.Messages;
 
 import java.util.LinkedList;
@@ -143,7 +142,7 @@ public class Statblock {
         Node[] children = new Node[4];
         List<VBox> collect = stats.stream()
             .map(stat -> new VBox(
-                new Label(stat.name().getValue()),
+                new JLabelBrown(stat.name().getValue()),
                 new Label(stat.value().getValue().toString())
             )).collect(Collectors.toList());
 //        sizeTypeTag.setFont(Font.font("Arial", FontWeight.NORMAL, 10));
@@ -153,18 +152,9 @@ public class Statblock {
 
     private Pane mainStats() {
         return new VBox(
-            new HBox(
-                new Label("Base Roll: "),
-                new Label("5")
-            ),
-            new HBox(
-                new Label("Armor: "),
-                new Label("5")
-            ),
-            new HBox(
-                new Label("Speed: "),
-                new Label("Walk 5ft")
-            )
+            new StatRow("Armor", "5"),
+            new StatRow("Base Roll", "5"),
+            new StatRow("Speed", "Walk 5ft., Burrow 15ft.")
         );
     }
 
@@ -179,7 +169,7 @@ public class Statblock {
 
         if (skillModifiers.size() > 0) {
             String joinedSkills = skillModifiers.stream().map(Skill::asText).collect(Collectors.joining(", "));
-            Label label = new Label("Skills: " + joinedSkills);
+            Label label = new StatRow("Skills", joinedSkills);
             misc.add(label);
         }
         List<DamageModifier> damageImmunities = List.of(
@@ -206,32 +196,32 @@ public class Statblock {
         //Print Modifiers
         if (damageImmunities.size() > 0) {
             String string = damageImmunities.stream().map(DamageModifier::asText).collect(Collectors.joining(", "));
-            Label data = new Label("Damage Immunities: " + string);
+            Label data = new StatRow("Damage Immunities", string);
             misc.add(data);
         }
         if (damageResistances.size() > 0) {
             String string = damageResistances.stream().map(DamageModifier::asText).collect(Collectors.joining(", "));
-            Label data = new Label("Damage Resistances: " + string);
+            Label data = new StatRow("Damage Resistances",  string);
             misc.add(data);
         }
         if (damageVulnerabilities.size() > 0) {
             String string = damageVulnerabilities.stream().map(DamageModifier::asText).collect(Collectors.joining(", "));
-            Label data = new Label("Damage Vulnerabilities: " + string);
+            Label data = new StatRow("Damage Vulnerabilities",  string);
             misc.add(data);
         }
         if (conditionImmunities.size() > 0) {
             String string = conditionImmunities.stream().map(DamageModifier::asText).collect(Collectors.joining(", "));
-            Label data = new Label("Condition Immunities: " + string);
+            Label data = new StatRow("Condition Immunities",  string);
             misc.add(data);
         }
         if (conditionResistances.size() > 0) {
             String string = conditionResistances.stream().map(DamageModifier::asText).collect(Collectors.joining(", "));
-            Label data = new Label("Condition Resistances: " + string);
+            Label data = new StatRow("Condition Resistances",  string);
             misc.add(data);
         }
         if (conditionVulnerabilities.size() > 0) {
             String string = conditionVulnerabilities.stream().map(DamageModifier::asText).collect(Collectors.joining(", "));
-            Label data = new Label("Condition Vulnerabilities: " + string);
+            Label data = new StatRow("Condition Vulnerabilities",  string);
             misc.add(data);
         }
         //Senses
@@ -240,7 +230,7 @@ public class Statblock {
         );
         if (senses.size() > 0) {
             String string = senses.stream().map(Attribute::asText).collect(Collectors.joining(", "));
-            Label data = new Label("Senses: " + string);
+            Label data = new StatRow("Senses",  string);
             misc.add(data);
         }
         //Languages
@@ -250,7 +240,7 @@ public class Statblock {
         );
         if (languages.size() > 0) {
             String string = languages.stream().map(Attribute::asText).collect(Collectors.joining(", "));
-            Label data = new Label("Languages: " + string);
+            Label data = new StatRow("Languages", string);
             misc.add(data);
         }
         Node[] nodes = new Node[9];
