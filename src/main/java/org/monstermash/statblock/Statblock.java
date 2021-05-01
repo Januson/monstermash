@@ -97,10 +97,12 @@ public class Statblock {
         content.add(miscAttributes(), 0, 6);
         content.add(getNewSeparator(), 0, 7);
         content.add(traits(), 0, 8);
-        content.add(getNewSeparator(), 0, 9);
-        content.add(manuevers(), 0, 10);
-        content.add(getNewSeparator(), 0, 11);
-        content.add(weapons(), 0, 12);
+        content.add(new Label("Finty"), 0, 9);
+        content.add(getNewSeparator(), 0, 10);
+        content.add(manuevers(), 0, 11);
+        content.add(new Label("Zbraně"), 0, 12);
+        content.add(getNewSeparator(), 0, 13);
+        content.add(weapons(), 0, 14);
         return content;
     }
 
