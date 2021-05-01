@@ -23,6 +23,7 @@ import org.monstermash.stats.DamageModifier;
 import org.monstermash.stats.Language;
 import org.monstermash.stats.Sense;
 import org.monstermash.stats.Skill;
+import org.monstermash.stats.Trait;
 import org.monstermash.ui.JLabelBrown;
 import org.monstermash.ui.Messages;
 
@@ -95,8 +96,11 @@ public class Statblock {
         content.add(getNewSeparator(), 0, 5);
         content.add(miscAttributes(), 0, 6);
         content.add(getNewSeparator(), 0, 7);
-//        content.add(traits(), 0, 6);
-//        content.add(getNewSeparator(), 0, 7);
+        content.add(traits(), 0, 8);
+        content.add(getNewSeparator(), 0, 9);
+        content.add(manuevers(), 0, 10);
+        content.add(getNewSeparator(), 0, 11);
+        content.add(weapons(), 0, 12);
         return content;
     }
 
@@ -239,12 +243,54 @@ public class Statblock {
             new Language("Tail tongue")
         );
         if (languages.size() > 0) {
-            String string = languages.stream().map(Attribute::asText).collect(Collectors.joining(", "));
+            var string = languages.stream().map(Attribute::asText).collect(Collectors.joining(", "));
             Label data = new StatRow("Languages", string);
             misc.add(data);
         }
         Node[] nodes = new Node[9];
         return new VBox(misc.toArray(nodes));
+    }
+
+    private Pane traits() {
+        //Misc
+        List<Trait> traits = List.of(
+            new Trait("Neživý", "Nepotřebuje jíst, pít, spát ani dýchat. Necítí bolest, nemůže krvácet, být pod vlivem jakýchkoli dalších omezujících stavů"),
+            new Trait("Nehmotný", "Může se pohybovat skrz pevné předměty i živé bytosti. Tyto překážky se počítají jako těžký terén. Pokud svůj pohyb ukončí na místě s takovou překážkou, ztratí jednu kostku. Pokud projde skrz živou bytost, hází ta na výzvu akrobacie s obtížností 1. Při úspěchu uskočí včas stranou, při neúspěchu ztrácí jednu kostku a získává Nevýhodu na další kolo boje"),
+            new Trait("Neviditelný", "Smrtonoška se může učinit neviditelnou, kdykoli chce. Je-li neviditelná, lze ji odhalit pouze pomocí světla svěcené svíce, či pokud je dotyčný sám z části ve světě přízraků")
+        );
+
+//        if (traitRows.size() > 0) {
+        List<TraitRow> traitRows = traits.stream().map(TraitRow::new).collect(Collectors.toList());
+        return new VBox(traitRows.toArray(new Node[traits.size()]));
+//        return new VBox();
+    }
+
+    private Pane manuevers() {
+        //Misc
+        List<Trait> traits = List.of(
+            new Trait("Neživý", "Nepotřebuje jíst, pít, spát ani dýchat. Necítí bolest, nemůže krvácet, být pod vlivem jakýchkoli dalších omezujících stavů"),
+            new Trait("Nehmotný", "Může se pohybovat skrz pevné předměty i živé bytosti. Tyto překážky se počítají jako těžký terén. Pokud svůj pohyb ukončí na místě s takovou překážkou, ztratí jednu kostku. Pokud projde skrz živou bytost, hází ta na výzvu akrobacie s obtížností 1. Při úspěchu uskočí včas stranou, při neúspěchu ztrácí jednu kostku a získává Nevýhodu na další kolo boje"),
+            new Trait("Neviditelný", "Smrtonoška se může učinit neviditelnou, kdykoli chce. Je-li neviditelná, lze ji odhalit pouze pomocí světla svěcené svíce, či pokud je dotyčný sám z části ve světě přízraků")
+        );
+
+//        if (traitRows.size() > 0) {
+        List<TraitRow> traitRows = traits.stream().map(TraitRow::new).collect(Collectors.toList());
+        return new VBox(traitRows.toArray(new Node[traits.size()]));
+//        return new VBox();
+    }
+
+    private Pane weapons() {
+        //Misc
+        List<Trait> traits = List.of(
+            new Trait("Neživý", "Nepotřebuje jíst, pít, spát ani dýchat. Necítí bolest, nemůže krvácet, být pod vlivem jakýchkoli dalších omezujících stavů"),
+            new Trait("Nehmotný", "Může se pohybovat skrz pevné předměty i živé bytosti. Tyto překážky se počítají jako těžký terén. Pokud svůj pohyb ukončí na místě s takovou překážkou, ztratí jednu kostku. Pokud projde skrz živou bytost, hází ta na výzvu akrobacie s obtížností 1. Při úspěchu uskočí včas stranou, při neúspěchu ztrácí jednu kostku a získává Nevýhodu na další kolo boje"),
+            new Trait("Neviditelný", "Smrtonoška se může učinit neviditelnou, kdykoli chce. Je-li neviditelná, lze ji odhalit pouze pomocí světla svěcené svíce, či pokud je dotyčný sám z části ve světě přízraků")
+        );
+
+//        if (traitRows.size() > 0) {
+        List<TraitRow> traitRows = traits.stream().map(TraitRow::new).collect(Collectors.toList());
+        return new VBox(traitRows.toArray(new Node[traits.size()]));
+//        return new VBox();
     }
 
 //    private  JPanel getNewBuffer() {
